@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Try Out OSN - @wrosn26</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, #0a0f1a 0%, #1a1f2e 50%, #0f172a 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .math-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .math-formula {
+            position: absolute;
+            font-family: 'STIX Two Text', 'Noto Serif', serif;
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 1.2rem;
+            font-style: italic;
+            animation: float-math 25s infinite ease-in-out;
+            white-space: nowrap;
+            user-select: none;
+        }
+        
+        .math-formula.large { font-size: 2.2rem; color: rgba(255, 255, 255, 0.22); font-weight: 700; }
+        
+        @keyframes float-math {
+            0%, 100% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0.08; }
+            25% { transform: translateY(-40px) rotate(3deg) translateX(15px); opacity: 0.2; }
+            50% { transform: translateY(-20px) rotate(-2deg) translateX(-10px); opacity: 0.12; }
+            75% { transform: translateY(-50px) rotate(2deg) translateX(8px); opacity: 0.18; }
+        }
+
+        .glass-morphism {
+            background: rgba(20, 25, 40, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .floating { animation: float 6s ease-in-out infinite; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.8); }
+        }
+
+        .hexagon {
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .hexagon:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.5));
+        }
+
+        .diamond {
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .pentagon {
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .octagon {
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .star {
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-interactive {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-interactive:hover { transform: scale(1.05); }
+        .btn-interactive:active { transform: scale(0.95); }
+
+        .whatsapp-section {
+            background: linear-gradient(135deg, rgba(37, 211, 102, 0.1) 0%, rgba(18, 140, 126, 0.1) 100%);
+            border: 1px solid rgba(37, 211, 102, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-section:hover {
+            background: linear-gradient(135deg, rgba(37, 211, 102, 0.2) 0%, rgba(18, 140, 126, 0.2) 100%);
+            border-color: rgba(37, 211, 102, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(37, 211, 102, 0.2);
+        }
+
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            animation: float-whatsapp 3s ease-in-out infinite;
+        }
+
+        @keyframes float-whatsapp {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .whatsapp-float-btn {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .whatsapp-float-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6);
+        }
+
+        .whatsapp-tooltip {
+            position: absolute;
+            right: 70px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(20, 25, 40, 0.95);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(37, 211, 102, 0.3);
+        }
+
+        .whatsapp-float:hover .whatsapp-tooltip {
+            opacity: 1;
+            visibility: visible;
+            right: 75px;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 25px;
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            animation: modalEnter 0.4s ease-out;
+            position: relative;
+        }
+
+        @keyframes modalEnter {
+            from { opacity: 0; transform: scale(0.9) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .whitelist-step { display: none; }
+        .whitelist-step.active { display: block; animation: stepEnter 0.3s ease-out; }
+
+        @keyframes stepEnter {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 18px 25px;
+            font-size: 1.1em;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            margin: 15px 0;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .input-field::placeholder { color: rgba(255,255,255,0.4); }
+
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            color: #aaa;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.95em;
+            margin-top: 15px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .error-message.show { display: flex; }
+
+        .success-icon {
+            font-size: 4em;
+            color: #4ECDC4;
+            margin-bottom: 20px;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transition: all 0.3s;
+        }
+
+        .step-dot.active {
+            background: #667eea;
+            transform: scale(1.2);
+        }
+
+        .step-dot.completed { background: #4ECDC4; }
+
+        .user-info-display {
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.5);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .user-info-display .label { color: #aaa; font-size: 0.9em; margin-bottom: 5px; }
+        .user-info-display .value { color: white; font-size: 1.2em; font-weight: 600; }
+
+        .price-tag {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.2) 100%);
+            border: 1px solid rgba(251, 191, 36, 0.5);
+            color: #fbbf24;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .secret-admin-trigger {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            width: 30px;
+            height: 30px;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 999;
+        }
+
+        .dashboard-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            z-index: 1500;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .dashboard-container.active { display: block; }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .dashboard-title {
+            font-size: 2em;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover { background: rgba(255,255,255,0.3); }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .dashboard-card h3 {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.08);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-box-value { font-size: 2.5em; font-weight: bold; color: #4ECDC4; }
+        .stat-box-label { color: #aaa; font-size: 0.9em; margin-top: 5px; }
+
+        .leaderboard-list { display: flex; flex-direction: column; gap: 12px; }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 15px;
+        }
+
+        .leaderboard-rank {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .rank-1 { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; }
+        .rank-2 { background: linear-gradient(135deg, #C0C0C0, #A0A0A0); color: #000; }
+        .rank-3 { background: linear-gradient(135deg, #CD7F32, #B87333); color: #fff; }
+        .rank-other { background: rgba(255,255,255,0.2); color: #fff; }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a2e;
+            z-index: 3000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .admin-panel.active { display: block; }
+
+        .results-table {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .results-table table { width: 100%; border-collapse: collapse; }
+        .results-table th { background: rgba(102, 126, 234, 0.3); padding: 15px; text-align: left; color: #fff; }
+        .results-table td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ddd; }
+
+        .whitelist-admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a2e;
+            z-index: 5000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .whitelist-admin-panel.active { display: block; }
+
+        .user-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 10px;
+        }
+
+        .code-badge {
+            font-family: monospace;
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        .action-btns { display: flex; gap: 8px; }
+
+        .btn-icon {
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .btn-copy {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border: 1px solid #667eea;
+        }
+
+        .btn-delete {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+        }
+
+        .message-box {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .message-box.success {
+            display: block;
+            background: rgba(78, 205, 196, 0.2);
+            color: #4ECDC4;
+            border: 1px solid #4ECDC4;
+        }
+
+        .message-box.error {
+            display: block;
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+        }
+
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            color: #aaa;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(255,255,255,0.05);
+            color: white;
+        }
+    </style>
+</head>
+<body class="text-white relative">
+
+    <!-- SECRET ADMIN TRIGGER -->
+    <div class="secret-admin-trigger" id="adminTrigger" onclick="handleAdminClick()"></div>
+
+    <!-- Math Background -->
+    <div class="math-background" id="mathBackground">
+        <div class="math-formula large" style="top: 2%; left: 2%;">$$\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}$$</div>
+        <div class="math-formula" style="top: 5%; left: 25%;">$$e^{i\pi} + 1 = 0$$</div>
+        <div class="math-formula" style="top: 3%; left: 50%;">$$\nabla \times \mathbf{F} = \mathbf{0}$$</div>
+        <div class="math-formula" style="top: 6%; left: 70%;">$$\sin^2\theta + \cos^2\theta = 1$$</div>
+        <div class="math-formula large" style="top: 1%; left: 85%;">$$\nabla^2 \psi = 0$$</div>
+    </div>
+
+    <!-- Floating WhatsApp -->
+    <div class="whatsapp-float">
+        <a href="https://chat.whatsapp.com/Eo8LkcddMgG3oWKGc9F9CE" target="_blank" class="whatsapp-float-btn">
+            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+        </a>
+        <span class="whatsapp-tooltip">Pesan via WhatsApp</span>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="content-wrapper container mx-auto px-4 py-8 min-h-screen flex flex-col items-center justify-center relative" style="position: relative; z-index: 10;">
+        
+        <!-- Header -->
+        <header class="text-center mb-12 floating">
+            <h1 class="text-6xl md:text-8xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4 tracking-tight cursor-pointer btn-interactive" onclick="openPricingModal()">
+                TRY OUT OSN
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400 font-light tracking-widest">@wrosn26</p>
+            <p class="text-sm text-amber-400 mt-2 cursor-pointer btn-interactive hover:text-amber-300 transition-colors" onclick="openPricingModal()">
+                Klik untuk lihat harga
+            </p>
+        </header>
+
+        <!-- Menu Navigasi Utama -->
+        <div class="flex flex-wrap justify-center gap-4 mb-8 w-full max-w-4xl">
+            <button onclick="openDashboard()" class="group relative px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl font-semibold hover:from-blue-500 hover:to-cyan-500 transition-all duration-300 btn-interactive flex items-center gap-3">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard Peserta</span>
+            </button>
+            <button onclick="openLeaderboard()" class="group relative px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl font-semibold hover:from-amber-400 hover:to-orange-400 transition-all duration-300 btn-interactive flex items-center gap-3">
+                <i class="fas fa-trophy"></i>
+                <span>Top 10 Leaderboard</span>
+            </button>
+            <button onclick="openWhitelistAdmin()" class="group relative px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl font-semibold hover:from-green-500 hover:to-emerald-500 transition-all duration-300 btn-interactive flex items-center gap-3">
+                <i class="fas fa-users-cog"></i>
+                <span>Admin: Kelola Peserta</span>
+            </button>
+        </div>
+
+        <!-- Try Out Grid Layout -->
+        <div class="relative w-full max-w-6xl h-[600px] md:h-[500px]">
+            
+            <!-- Try Out 1 -->
+            <div class="absolute top-0 left-0 md:left-10 transform hover:scale-105 transition-transform cursor-pointer group" onclick="openWhitelistModal(1)">
+                <div class="relative w-40 h-44 md:w-48 md:h-52">
+                    <div class="hexagon w-full h-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-2xl group-hover:shadow-cyan-500/50">
+                        <div class="text-center z-10">
+                            <div class="text-4xl md:text-5xl font-bold mb-1">1</div>
+                            <div class="text-sm md:text-base font-medium">Try Out 1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Try Out 2 -->
+            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 hover:scale-105 transition-transform cursor-pointer group" onclick="openWhitelistModal(2)">
+                <div class="relative w-44 h-44 md:w-52 md:h-52">
+                    <div class="diamond w-full h-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-2xl group-hover:shadow-violet-500/50">
+                        <div class="text-center">
+                            <div class="text-4xl md:text-5xl font-bold mb-1">2</div>
+                            <div class="text-sm md:text-base font-medium">Try Out 2</div>
+                            <div class="text-xs mt-1 text-green-400">Aktif</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Try Out 3 -->
+            <div class="absolute top-0 right-0 md:right-10 transform hover:scale-105 transition-transform cursor-pointer group" onclick="comingSoon(3)">
+                <div class="relative w-44 h-48 md:w-52 md:h-56">
+                    <div class="pentagon w-full h-full bg-gradient-to-br from-fuchsia-500 to-pink-600 flex items-center justify-center shadow-2xl group-hover:shadow-pink-500/50 opacity-60 pt-4">
+                        <div class="text-center">
+                            <div class="text-4xl md:text-5xl font-bold mb-1">3</div>
+                            <div class="text-sm md:text-base font-medium">Try Out 3</div>
+                            <div class="text-xs mt-1 text-white/60">Segera</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Try Out 4 -->
+            <div class="absolute bottom-0 left-1/4 transform -translate-x-1/2 hover:scale-105 transition-transform cursor-pointer group" onclick="comingSoon(4)">
+                <div class="relative w-40 h-40 md:w-48 md:h-48">
+                    <div class="octagon w-full h-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-2xl group-hover:shadow-emerald-500/50 opacity-60">
+                        <div class="text-center">
+                            <div class="text-4xl md:text-5xl font-bold mb-1">4</div>
+                            <div class="text-sm md:text-base font-medium">Try Out 4</div>
+                            <div class="text-xs mt-1 text-white/60">Segera</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Try Out 5 -->
+            <div class="absolute bottom-0 right-1/4 transform translate-x-1/2 hover:scale-105 transition-transform cursor-pointer group" onclick="comingSoon(5)">
+                <div class="relative w-48 h-48 md:w-56 md:h-56">
+                    <div class="star w-full h-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-2xl group-hover:shadow-amber-500/50 opacity-60">
+                        <div class="text-center mt-2">
+                            <div class="text-4xl md:text-5xl font-bold mb-1 text-white drop-shadow-lg">5</div>
+                            <div class="text-sm md:text-base font-medium text-white drop-shadow-md">Try Out 5</div>
+                            <div class="text-xs mt-1 text-white/60">Segera</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Info Section -->
+        <div class="mt-8 text-center max-w-2xl mx-auto px-4">
+            <div class="glass-morphism rounded-xl p-6 border border-white/10">
+                <h3 class="text-lg font-semibold mb-3 text-indigo-300">Format Soal Sesuai Puspresnas:</h3>
+                <div class="flex justify-center gap-8 text-sm">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">10</div>
+                        <span class="text-gray-300">Pilihan Ganda (1 poin)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">10</div>
+                        <span class="text-gray-300">Isian Singkat (4 poin)</span>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-400 mt-4 italic">*Total skor maksimal: 50 poin</p>
+            </div>
+        </div>
+
+        <!-- WhatsApp Order -->
+        <div class="mt-8 w-full max-w-2xl mx-auto px-4">
+            <a href="https://chat.whatsapp.com/Eo8LkcddMgG3oWKGc9F9CE" target="_blank" class="block">
+                <div class="whatsapp-section rounded-2xl p-6 cursor-pointer btn-interactive">
+                    <div class="flex items-center justify-center gap-4">
+                        <div class="text-4xl text-green-400"><i class="fab fa-whatsapp"></i></div>
+                        <div class="text-left">
+                            <h3 class="text-xl font-bold text-green-400 mb-1">Klik untuk Memesan</h3>
+                            <p class="text-gray-300 text-sm">Bergabung ke grup WhatsApp untuk pemesanan</p>
+                        </div>
+                        <i class="fas fa-arrow-right text-green-400 animate-bounce"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Pricing Button -->
+        <div class="mt-8 text-center">
+            <button onclick="openPricingModal()" class="group relative px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full font-semibold text-lg hover:from-indigo-500 hover:to-purple-500 transition-all duration-300 pulse-glow btn-interactive">
+                <span class="relative z-10">Lihat Detail Harga</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- WHITELIST & PASSWORD MODAL -->
+    <div class="modal-overlay" id="accessModal">
+        <div class="modal-content">
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div class="step-dot active" id="dot1"></div>
+                <div class="step-dot" id="dot2"></div>
+                <div class="step-dot" id="dot3"></div>
+            </div>
+
+            <!-- STEP 1: Nama -->
+            <div class="whitelist-step active" id="step1">
+                <div class="text-center mb-6">
+                    <div class="price-tag" id="modalPriceTag">Try Out 1 - Rp 10.000</div>
+                    <h2 class="text-2xl font-bold mb-2">Verifikasi Peserta</h2>
+                    <p class="text-gray-400">Masukkan nama lengkap Anda sesuai pendaftaran</p>
+                </div>
+                <input type="text" class="input-field" id="inputName" placeholder="Contoh: Budi Santoso" autocomplete="off">
+                <div class="error-message" id="error1">
+                    <i class="fas fa-exclamation-circle"></i> <span>Nama tidak terdaftar!</span>
+                </div>
+                <button class="btn-primary" onclick="verifyName()">
+                    <i class="fas fa-arrow-right"></i> Lanjutkan
+                </button>
+                <button class="btn-secondary" onclick="closeAccessModal()">Batal</button>
+            </div>
+
+            <!-- STEP 2: Kode Unik -->
+            <div class="whitelist-step" id="step2">
+                <div class="text-center mb-6">
+                    <div class="price-tag" id="modalPriceTag2">Try Out 1 - Rp 10.000</div>
+                    <h2 class="text-2xl font-bold mb-2">Verifikasi Kode</h2>
+                    <p class="text-gray-400">Masukkan kode unik yang diberikan admin</p>
+                </div>
+                <div class="user-info-display">
+                    <div class="label">Nama Peserta</div>
+                    <div class="value" id="displayName">-</div>
+                </div>
+                <input type="text" class="input-field" id="inputCode" placeholder="Contoh: OSN2024_001" autocomplete="off" style="text-transform: uppercase;">
+                <div class="error-message" id="error2">
+                    <i class="fas fa-exclamation-circle"></i> <span>Kode tidak valid!</span>
+                </div>
+                <button class="btn-primary" onclick="verifyCode()">
+                    <i class="fas fa-arrow-right"></i> Verifikasi Kode
+                </button>
+                <button class="btn-secondary" onclick="goToStep(1)">Kembali</button>
+            </div>
+
+            <!-- STEP 3: Password -->
+            <div class="whitelist-step" id="step3">
+                <div class="text-center mb-6">
+                    <div class="price-tag" id="modalPriceTag3">Try Out 1 - Rp 10.000</div>
+                    <h2 class="text-2xl font-bold mb-2">Password Try Out</h2>
+                    <p class="text-gray-400">Masukkan password dari grup WhatsApp</p>
+                </div>
+                <div class="user-info-display">
+                    <div class="label">Peserta</div>
+                    <div class="value" id="displayName2">-</div>
+                </div>
+                <input type="password" class="input-field" id="inputPassword" placeholder="Masukkan password..." autocomplete="off">
+                <p class="text-xs text-center text-gray-500 mt-2">
+                    <i class="fas fa-info-circle"></i> Password didapat setelah pembayaran
+                </p>
+                <div class="error-message" id="error3">
+                    <i class="fas fa-exclamation-circle"></i> <span>Password salah!</span>
+                </div>
+                <button class="btn-primary" onclick="verifyPassword()">
+                    <i class="fas fa-unlock"></i> Masuk ke Try Out
+                </button>
+                <button class="btn-secondary" onclick="goToStep(2)">Kembali</button>
+            </div>
+
+            <!-- STEP 4: Success & Redirect -->
+            <div class="whitelist-step" id="step4">
+                <div class="text-center">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold mb-2">Verifikasi Berhasil!</h2>
+                    <p class="text-gray-400 mb-6">Anda akan diarahkan ke halaman ujian...</p>
+                    <div class="user-info-display">
+                        <div class="label">Selamat mengerjakan</div>
+                        <div class="value" id="displayName3">-</div>
+                    </div>
+                    <button class="btn-primary" onclick="redirectToExam()">
+                        <i class="fas fa-play"></i> Mulai Try Out Sekarang
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRICING MODAL -->
+    <div class="modal-overlay" id="pricingModal" onclick="closePricingOnOverlay(event)">
+        <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 600px;">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold mb-2 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Daftar Harga</h2>
+                <p class="text-gray-400">Bayar per Try Out sesuai kebutuhan</p>
+            </div>
+
+            <div class="space-y-3 mb-6">
+                <div class="flex items-center justify-between p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer" onclick="selectPrice(1)">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-cyan-500/20 flex items-center justify-center text-cyan-400 font-bold">1x</div>
+                        <span>Satu Kali Try Out</span>
+                    </div>
+                    <span class="text-xl font-bold text-amber-400">Rp 10.000</span>
+                </div>
+
+                <div class="flex items-center justify-between p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer" onclick="selectPrice(2)">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-violet-500/20 flex items-center justify-center text-violet-400 font-bold">2x</div>
+                        <span>Dua Kali Try Out</span>
+                    </div>
+                    <span class="text-xl font-bold text-amber-400">Rp 20.000</span>
+                </div>
+
+                <div class="flex items-center justify-between p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer" onclick="selectPrice(3)">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 font-bold">3x</div>
+                        <span>Tiga Kali Try Out</span>
+                    </div>
+                    <span class="text-xl font-bold text-amber-400">Rp 30.000</span>
+                </div>
+
+                <div class="flex items-center justify-between p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer" onclick="selectPrice(4)">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">4x</div>
+                        <span>Empat Kali Try Out</span>
+                    </div>
+                    <span class="text-xl font-bold text-amber-400">Rp 40.000</span>
+                </div>
+
+                <div class="flex items-center justify-between p-4 rounded-lg bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 hover:bg-amber-500/30 transition-colors cursor-pointer" onclick="selectPrice(5)">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-amber-500/30 flex items-center justify-center text-amber-400 font-bold">5x</div>
+                        <div>
+                            <span class="block">Lima Kali Try Out</span>
+                            <span class="text-xs text-amber-300">Paket Lengkap</span>
+                        </div>
+                    </div>
+                    <span class="text-xl font-bold text-amber-400">Rp 50.000</span>
+                </div>
+            </div>
+
+            <button onclick="closePricingModal()" class="w-full py-3 rounded-lg border border-white/20 hover:bg-white/10 transition-colors">
+                Tutup
+            </button>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard-container" id="dashboardContainer">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <i class="fas fa-chart-line"></i> 
+                <span id="dashboardUserName">Dashboard Peserta</span>
+            </div>
+            <button onclick="closeDashboard()" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </button>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <h3><i class="fas fa-user-graduate"></i> Statistik Saya</h3>
+                <div class="stat-box">
+                    <div class="stat-box-value" id="myTotalScore">0</div>
+                    <div class="stat-box-label">Total Poin Terbaik</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-box-value" id="myRank">-</div>
+                    <div class="stat-box-label">Peringkat</div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <h3><i class="fas fa-history"></i> Riwayat Try Out</h3>
+                <div id="historyList">
+                    <p style="color: #888; text-align: center; padding: 20px;">Belum ada riwayat</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div class="dashboard-container" id="leaderboardContainer">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <i class="fas fa-trophy" style="color: #FFD700;"></i> Top 10 Leaderboard
+            </div>
+            <button onclick="closeLeaderboard()" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </button>
+        </div>
+
+        <div class="dashboard-grid" style="max-width: 800px; margin: 0 auto;">
+            <div class="dashboard-card" style="grid-column: 1 / -1;">
+                <h3><i class="fas fa-medal"></i> Peringkat Terbaik</h3>
+                <div class="leaderboard-list" id="top10List"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN PANEL (Hasil Ujian) -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="dashboard-header">
+            <div class="dashboard-title" id="adminPanelTitle">
+                <i class="fas fa-lock"></i> Secret Admin Panel
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button onclick="switchTryOut(1)" class="back-btn" id="btnTO1" style="background: #667eea;">
+                    <i class="fas fa-list"></i> TO 1
+                </button>
+                <button onclick="switchTryOut(2)" class="back-btn" id="btnTO2">
+                    <i class="fas fa-list"></i> TO 2
+                </button>
+                <button onclick="resetLeaderboard()" class="back-btn" style="background: #e74c3c;">
+                    <i class="fas fa-trash"></i> Reset Data
+                </button>
+                <button onclick="exportToCSV()" class="back-btn" style="background: #4ECDC4;">
+                    <i class="fas fa-download"></i> Export CSV
+                </button>
+                <button onclick="closeAdminPanel()" class="back-btn">
+                    <i class="fas fa-times"></i> Tutup
+                </button>
+            </div>
+        </div>
+
+        <div class="results-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Waktu</th>
+                        <th>Skor</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- WHITELIST ADMIN PANEL -->
+    <div class="whitelist-admin-panel" id="whitelistAdminPanel">
+        <div style="max-width: 900px; margin: 0 auto;">
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <i class="fas fa-users-cog"></i> Kelola Peserta Whitelist
+                </div>
+                <button onclick="closeWhitelistAdmin()" class="back-btn">
+                    <i class="fas fa-times"></i> Tutup
+                </button>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="tab-container">
+                <button class="tab-btn active" id="tabTO1" onclick="switchAdminTab(1)">
+                    <i class="fas fa-hexagon"></i> Try Out 1
+                </button>
+                <button class="tab-btn" id="tabTO2" onclick="switchAdminTab(2)">
+                    <i class="fas fa-diamond"></i> Try Out 2
+                </button>
+            </div>
+
+            <!-- Form Tambah Peserta -->
+            <div class="dashboard-card" style="margin-bottom: 20px;">
+                <h3 id="addUserTitle"><i class="fas fa-user-plus"></i> Tambah Peserta TO 1</h3>
+                <div style="display: grid; gap: 15px;">
+                    <div>
+                        <label style="color: #aaa; display: block; margin-bottom: 5px;">Nama Lengkap</label>
+                        <input type="text" id="newUserName" class="input-field" style="margin: 0;" placeholder="Masukkan nama lengkap...">
+                    </div>
+                    <div>
+                        <label style="color: #aaa; display: block; margin-bottom: 5px;">Kode Unik</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="newUserCode" class="input-field" style="margin: 0; flex: 1; text-transform: uppercase;" placeholder="OSN2024_XXX">
+                            <button onclick="generateCode()" class="btn-primary" style="width: auto; padding: 15px 20px; margin: 0;">
+                                <i class="fas fa-random"></i> Generate
+                            </button>
+                        </div>
+                    </div>
+                    <button onclick="addNewUser()" class="btn-primary">
+                        <i class="fas fa-plus"></i> Tambah Peserta
+                    </button>
+                    <div id="addUserMessage" class="message-box"></div>
+                </div>
+            </div>
+
+            <!-- Import/Export -->
+            <div class="dashboard-card" style="margin-bottom: 20px;">
+                <h3 id="backupTitle"><i class="fas fa-file-export"></i> Backup & Restore TO 1</h3>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button onclick="exportWhitelist()" class="btn-primary" style="flex: 1; min-width: 200px;">
+                        <i class="fas fa-download"></i> Export ke JSON
+                    </button>
+                    <label class="btn-primary" style="flex: 1; min-width: 200px; cursor: pointer; text-align: center;">
+                        <i class="fas fa-upload"></i> Import dari JSON
+                        <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importWhitelist(this)">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Daftar Peserta -->
+            <div class="dashboard-card">
+                <h3 id="listTitle"><i class="fas fa-list"></i> Daftar Peserta TO 1 (<span id="totalUsers">0</span>)</h3>
+                <div style="margin-bottom: 15px;">
+                    <input type="text" id="searchUser" class="input-field" style="margin: 0;" placeholder="Cari peserta..." oninput="renderUsersList()">
+                </div>
+                <div id="usersList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // KONFIGURASI - EDIT DI SINI
+        // ============================================
+        
+        // DATABASE PESERTA TO 1 (Whitelist terpisah)
+        const WHITELISTED_USERS_TO1 = [
+            { code: '12109856', name: 'AFIDA (1A)' },
+            { code: '09156728', name: 'NAJWA (2B)' },
+            { code: '56189914', name: 'NADINE (3C)' },
+            { code: '00592178', name: 'ERIN (4D)' },
+            { code: '81792443', name: 'FIRA (5E)' },
+            { code: '19847652', name: 'BAGAS (6F)' },
+            { code: '76518423', name: 'NAILAH (7G)' },
+            { code: '11098762', name: 'SALSA (8H)' },
+            { code: '56718293', name: 'MAYA (9I)' },
+            { code: '87652113', name: 'REZA (10J)' },
+            { code: '35672119', name: 'SYIFA (11K)' },
+            { code: '81907568', name: 'PRIYO (12L)' },
+            { code: '01987551', name: 'JESSYCA (13M)' },
+            { code: '55671880', name: 'BASIT (14N)' },
+            { code: '11678591', name: 'DHANA (15O)' },
+            { code: '31455590', name: 'NAYLA (16P)' },
+            { code: '01925541', name: 'KAVIRA (17R)' },
+        ];
+
+        // DATABASE PESERTA TO 2 (Whitelist terpisah - nama berbeda!)
+        const WHITELISTED_USERS_TO2 = [
+            { code: 'TO2A001', name: 'DANI (1AA)' },
+            { code: 'TO2A002', name: 'MAULA (2BB)' },
+            { code: 'TO2A003', name: 'ERIN (3CC)' },
+            { code: 'TO2A004', name: 'FELYSA (4DD)' },
+            { code: 'TO2A005', name: 'FIRA (5EE)' },
+            { code: 'TO2A006', name: 'HENDRA (6FF)' },
+            { code: 'TO2A007', name: 'JESSICA (7GG)' },
+            { code: 'TO2A008', name: 'KALISA (8HH)' },
+            { code: 'TO2A009', name: 'KAVIRAH (99)' },
+            { code: 'TO2A010', name: 'JOKO SUSILO' },
+        ];
+
+        // PASSWORD TRY OUT
+        const TRYOUT_PASSWORD = '875611092';           // Password TO 1
+        const TRYOUT_2_PASSWORD = 'TO2WROSN2024';      // Password TO 2
+
+        // URL WEBSITE TRY OUT
+        const TRYOUT_URL = 'https://farras-tbz.github.io/SOAL-TRY-OUT-1/';
+        const TRYOUT_2_URL = 'https://farras-tbz.github.io/SOAL-TRY-OUT-2/';
+
+        // PASSWORD ADMIN
+        const ADMIN_PASSWORD = 'wrosn26admin123';
+        const WHITELIST_ADMIN_PASSWORD = 'whitelistadminwrosn26123';
+
+        // ============================================
+        // STATE VARIABLES
+        // ============================================
+        let currentStep = 1;
+        let verifiedUser = null;
+        let currentTryOut = 1;
+        let currentAdminView = 1;
+        let currentAdminTab = 1;
+
+        // ============================================
+        // GET WHITELIST BY TO NUMBER
+        // ============================================
+        function getWhitelist(toNum) {
+            const storageKey = toNum === 2 ? 'tryout_whitelist_to2' : 'tryout_whitelist_to1';
+            const defaultList = toNum === 2 ? WHITELISTED_USERS_TO2 : WHITELISTED_USERS_TO1;
+            
+            const saved = localStorage.getItem(storageKey);
+            if (saved) {
+                return JSON.parse(saved);
+            }
+            return [...defaultList]; // Return copy of default
+        }
+
+        function saveWhitelist(toNum, list) {
+            const storageKey = toNum === 2 ? 'tryout_whitelist_to2' : 'tryout_whitelist_to1';
+            localStorage.setItem(storageKey, JSON.stringify(list));
+        }
+
+        // ============================================
+        // WHITELIST MODAL FUNCTIONS
+        // ============================================
+        function openWhitelistModal(tryOutNum) {
+            currentTryOut = tryOutNum;
+            
+            // Update label harga di modal
+            const priceText = `Try Out ${tryOutNum} - Rp 10.000`;
+            document.getElementById('modalPriceTag').textContent = priceText;
+            document.getElementById('modalPriceTag2').textContent = priceText;
+            document.getElementById('modalPriceTag3').textContent = priceText;
+            
+            document.getElementById('accessModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            goToStep(1);
+            setTimeout(() => document.getElementById('inputName').focus(), 100);
+        }
+
+        function closeAccessModal() {
+            document.getElementById('accessModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            verifiedUser = null;
+            currentStep = 1;
+            document.getElementById('inputName').value = '';
+            document.getElementById('inputCode').value = '';
+            document.getElementById('inputPassword').value = '';
+            document.querySelectorAll('.error-message').forEach(e => e.classList.remove('show'));
+        }
+
+        function goToStep(step) {
+            document.querySelectorAll('.whitelist-step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+            document.querySelectorAll('.step-dot').forEach((d, i) => {
+                d.classList.remove('active', 'completed');
+                if (i + 1 < step) d.classList.add('completed');
+                if (i + 1 === step) d.classList.add('active');
+            });
+            currentStep = step;
+            setTimeout(() => {
+                const input = document.querySelector('#step' + step + ' input');
+                if (input) input.focus();
+            }, 100);
+        }
+
+        // ============================================
+        // VERIFICATION FUNCTIONS
+        // ============================================
+        function verifyName() {
+            const name = document.getElementById('inputName').value.trim().toLowerCase();
+            const errorEl = document.getElementById('error1');
+            
+            if (!name) {
+                showError(errorEl, 'Masukkan nama!');
+                return;
+            }
+            
+            // Cek di whitelist sesuai nomor TO
+            const whitelist = getWhitelist(currentTryOut);
+            const user = whitelist.find(u => u.name.toLowerCase() === name);
+            
+            if (!user) {
+                showError(errorEl, `Nama tidak terdaftar di Try Out ${currentTryOut}! Silakan hubungi admin.`);
+                shakeModal();
+                return;
+            }
+            
+            verifiedUser = user;
+            document.getElementById('displayName').textContent = user.name;
+            document.getElementById('displayName2').textContent = user.name;
+            document.getElementById('displayName3').textContent = user.name;
+            
+            errorEl.classList.remove('show');
+            goToStep(2);
+        }
+
+        function verifyCode() {
+            const code = document.getElementById('inputCode').value.trim().toUpperCase();
+            const errorEl = document.getElementById('error2');
+            
+            if (!code) {
+                showError(errorEl, 'Masukkan kode unik!');
+                return;
+            }
+            
+            if (verifiedUser.code !== code) {
+                showError(errorEl, 'Kode tidak cocok dengan nama peserta!');
+                shakeModal();
+                return;
+            }
+            
+            errorEl.classList.remove('show');
+            goToStep(3);
+        }
+
+        function verifyPassword() {
+            const password = document.getElementById('inputPassword').value.trim();
+            const errorEl = document.getElementById('error3');
+            
+            if (!password) {
+                showError(errorEl, 'Masukkan password!');
+                return;
+            }
+            
+            // Cek password berdasarkan nomor try out
+            const correctPassword = currentTryOut === 2 ? TRYOUT_2_PASSWORD : TRYOUT_PASSWORD;
+            
+            if (password !== correctPassword) {
+                showError(errorEl, 'Password salah!');
+                return;
+            }
+            
+            errorEl.classList.remove('show');
+            goToStep(4);
+        }
+
+        function showError(el, msg) {
+            el.querySelector('span').textContent = msg;
+            el.classList.add('show');
+        }
+
+        function shakeModal() {
+            const box = document.querySelector('.modal-content');
+            box.style.animation = 'none';
+            setTimeout(() => box.style.animation = 'modalEnter 0.4s ease-out', 10);
+        }
+
+        function redirectToExam() {
+            const token = btoa(JSON.stringify({
+                n: verifiedUser.name,
+                c: verifiedUser.code,
+                t: Date.now(),
+                r: Math.random().toString(36).substring(7),
+                to: currentTryOut
+            }));
+            
+            // Pilih URL berdasarkan nomor try out
+            const targetUrl = currentTryOut === 2 ? TRYOUT_2_URL : TRYOUT_URL;
+            window.location.href = targetUrl + '?token=' + token;
+        }
+
+        // ============================================
+        // WHITELIST ADMIN FUNCTIONS
+        // ============================================
+        function openWhitelistAdmin() {
+            const pass = prompt('Masukkan password admin whitelist:');
+            if (pass !== WHITELIST_ADMIN_PASSWORD) {
+                alert('Password salah!');
+                return;
+            }
+            document.getElementById('whitelistAdminPanel').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            switchAdminTab(1); // Default ke TO1
+        }
+
+        function closeWhitelistAdmin() {
+            document.getElementById('whitelistAdminPanel').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function switchAdminTab(toNum) {
+            currentAdminTab = toNum;
+            
+            // Update tab UI
+            document.getElementById('tabTO1').classList.toggle('active', toNum === 1);
+            document.getElementById('tabTO2').classList.toggle('active', toNum === 2);
+            
+            // Update titles
+            document.getElementById('addUserTitle').innerHTML = `<i class="fas fa-user-plus"></i> Tambah Peserta TO ${toNum}`;
+            document.getElementById('backupTitle').innerHTML = `<i class="fas fa-file-export"></i> Backup & Restore TO ${toNum}`;
+            document.getElementById('listTitle').innerHTML = `<i class="fas fa-list"></i> Daftar Peserta TO ${toNum} (<span id="totalUsers">0</span>)`;
+            
+            // Clear inputs
+            document.getElementById('newUserName').value = '';
+            document.getElementById('newUserCode').value = '';
+            
+            renderUsersList();
+        }
+
+        function generateCode() {
+            const prefix = currentAdminTab === 2 ? 'TO2A' : 'TO1A';
+            const randomNum = String(Math.floor(1 + Math.random() * 999)).padStart(3, '0');
+            const whitelist = getWhitelist(currentAdminTab);
+            const existingCodes = whitelist.map(u => u.code);
+            
+            let newCode = prefix + randomNum;
+            let counter = 1;
+            while (existingCodes.includes(newCode)) {
+                const newNum = String(parseInt(randomNum) + counter).padStart(3, '0');
+                newCode = prefix + newNum;
+                counter++;
+            }
+            document.getElementById('newUserCode').value = newCode;
+        }
+
+        function addNewUser() {
+            const name = document.getElementById('newUserName').value.trim();
+            const code = document.getElementById('newUserCode').value.trim().toUpperCase();
+            const msgEl = document.getElementById('addUserMessage');
+            const whitelist = getWhitelist(currentAdminTab);
+            
+            if (!name) {
+                showMessage(msgEl, 'Masukkan nama!', 'error');
+                return;
+            }
+            if (!code) {
+                showMessage(msgEl, 'Masukkan atau generate kode!', 'error');
+                return;
+            }
+            if (whitelist.some(u => u.code === code)) {
+                showMessage(msgEl, 'Kode sudah digunakan!', 'error');
+                return;
+            }
+            if (whitelist.some(u => u.name.toLowerCase() === name.toLowerCase())) {
+                showMessage(msgEl, 'Nama sudah terdaftar!', 'error');
+                return;
+            }
+            
+            // Add to current whitelist
+            whitelist.push({ code: code, name: name });
+            saveWhitelist(currentAdminTab, whitelist);
+            
+            document.getElementById('newUserName').value = '';
+            document.getElementById('newUserCode').value = '';
+            showMessage(msgEl, `✅ ${name} berhasil ditambahkan ke TO ${currentAdminTab} dengan kode ${code}`, 'success');
+            renderUsersList();
+        }
+
+        function showMessage(el, text, type) {
+            el.textContent = text;
+            el.className = 'message-box ' + type;
+            setTimeout(() => el.className = 'message-box', 3000);
+        }
+
+        function renderUsersList() {
+            const container = document.getElementById('usersList');
+            const search = document.getElementById('searchUser')?.value.toLowerCase() || '';
+            const whitelist = getWhitelist(currentAdminTab);
+            
+            const filtered = whitelist.filter(u => 
+                u.name.toLowerCase().includes(search) || 
+                u.code.toLowerCase().includes(search)
+            );
+            
+            document.getElementById('totalUsers').textContent = whitelist.length;
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Tidak ada peserta</p>';
+                return;
+            }
+            
+            container.innerHTML = filtered.map((u, index) => {
+                const actualIndex = whitelist.indexOf(u);
+                return `
+                    <div class="user-list-item">
+                        <div>
+                            <div style="font-weight: 600; color: white;">${u.name}</div>
+                            <div class="code-badge">
+                                <i class="fas fa-key"></i> ${u.code}
+                            </div>
+                        </div>
+                        <div class="action-btns">
+                            <button class="btn-icon btn-copy" onclick="copyToClipboard('${u.code}')" title="Copy kode">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button class="btn-icon btn-delete" onclick="deleteUser(${actualIndex})" title="Hapus">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Kode berhasil dicopy: ' + text);
+            });
+        }
+
+        function deleteUser(index) {
+            const whitelist = getWhitelist(currentAdminTab);
+            if (!confirm(`Yakin hapus ${whitelist[index].name} dari TO ${currentAdminTab}?`)) return;
+            
+            whitelist.splice(index, 1);
+            saveWhitelist(currentAdminTab, whitelist);
+            renderUsersList();
+        }
+
+        function exportWhitelist() {
+            const whitelist = getWhitelist(currentAdminTab);
+            const dataStr = JSON.stringify(whitelist, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `whitelist_to${currentAdminTab}_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importWhitelist(input) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = e => {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (Array.isArray(imported)) {
+                        const whitelist = getWhitelist(currentAdminTab);
+                        let added = 0;
+                        
+                        imported.forEach(u => {
+                            if (u.code && u.name && !whitelist.some(existing => existing.code === u.code)) {
+                                whitelist.push(u);
+                                added++;
+                            }
+                        });
+                        
+                        saveWhitelist(currentAdminTab, whitelist);
+                        renderUsersList();
+                        alert(`Berhasil import ${added} peserta ke TO ${currentAdminTab}!`);
+                    }
+                } catch (err) {
+                    alert('File tidak valid!');
+                }
+            };
+            reader.readAsText(file);
+            input.value = '';
+        }
+
+                // ============================================
+        // PRICING FUNCTIONS
+        // ============================================
+        function openPricingModal() {
+            document.getElementById('pricingModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePricingModal() {
+            document.getElementById('pricingModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function closePricingOnOverlay(e) {
+            if (e.target.id === 'pricingModal') closePricingModal();
+        }
+
+        function selectPrice(num) {
+            const prices = {1: '10.000', 2: '20.000', 3: '30.000', 4: '40.000', 5: '50.000'};
+            alert('Anda memilih ' + num + 'x Try Out - Rp ' + prices[num] + '\n\nSilakan hubungi admin via WhatsApp untuk pembayaran.');
+            window.open('https://chat.whatsapp.com/Eo8LkcddMgG3oWKGc9F9CE', '_blank');
+        }
+
+        function comingSoon(num) {
+            alert('Try Out ' + num + ' akan segera hadir!');
+        }
+
+        // ============================================
+        // DASHBOARD & LEADERBOARD
+        // ============================================
+        function openDashboard() {
+            document.getElementById('dashboardContainer').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            renderDashboard();
+        }
+
+        function closeDashboard() {
+            document.getElementById('dashboardContainer').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function openLeaderboard() {
+            document.getElementById('leaderboardContainer').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            renderLeaderboard();
+        }
+
+        function closeLeaderboard() {
+            document.getElementById('leaderboardContainer').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function renderDashboard() {
+            const to1Results = JSON.parse(localStorage.getItem('tryout_results') || '[]');
+            const to2Results = JSON.parse(localStorage.getItem('tryout_2_results') || '[]');
+            
+            // Gabungkan semua hasil
+            const allUserResults = [...to1Results, ...to2Results];
+            const currentUser = sessionStorage.getItem('currentUser') || '';
+            const userResults = allUserResults.filter(r => r.name === currentUser);
+            
+            const bestResult = userResults.length > 0 
+                ? userResults.reduce((max, r) => r.score > max.score ? r : max, userResults[0])
+                : null;
+            
+            document.getElementById('myTotalScore').textContent = bestResult ? bestResult.score : '0';
+            
+            const sortedResults = [...allUserResults].sort((a, b) => b.score - a.score);
+            const userRank = bestResult ? sortedResults.findIndex(r => r.name === bestResult.name && r.score === bestResult.score) + 1 : '-';
+            document.getElementById('myRank').textContent = userRank !== '-' ? '#' + userRank : '-';
+            
+            const historyList = document.getElementById('historyList');
+            if (userResults.length === 0) {
+                historyList.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Belum ada riwayat</p>';
+            } else {
+                historyList.innerHTML = userResults.map(r => `
+                    <div class="history-item">
+                        <div>
+                            <div style="font-weight: 600;">${r.name}</div>
+                            <div style="font-size: 0.8em; color: #888;">${r.time}</div>
+                            <div style="font-size: 0.75em; color: #4ECDC4;">TO${r.tryOut || 1}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.3em; font-weight: bold; color: #4ECDC4;">${r.score}/50</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderLeaderboard() {
+            const container = document.getElementById('top10List');
+            const to1Results = JSON.parse(localStorage.getItem('tryout_results') || '[]');
+            const to2Results = JSON.parse(localStorage.getItem('tryout_2_results') || '[]');
+            
+            // Gabungkan dan ambil nilai tertinggi per peserta
+            const combined = {};
+            [...to1Results, ...to2Results].forEach(r => {
+                if (!combined[r.name] || combined[r.name].score < r.score) {
+                    combined[r.name] = r;
+                }
+            });
+            
+            let data = Object.values(combined);
+            
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #888;">
+                        <i class="fas fa-inbox" style="font-size: 3em; margin-bottom: 15px; display: block;"></i>
+                        Belum ada data hasil ujian.<br>
+                        <small>Data akan muncul setelah peserta menyelesaikan try out.</small>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort by score descending
+            data.sort((a, b) => b.score - a.score);
+            
+            // Ambil top 10
+            const top10 = data.slice(0, 10);
+            
+            container.innerHTML = top10.map((p, i) => {
+                const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
+                const medal = i === 0 ? '👑' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+                return `
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank ${rankClass}">${medal}</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600;">${p.name}</div>
+                            <div style="font-size: 0.8em; color: #888;">${p.time || '-'}</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 20px; font-weight: bold; color: ${i < 3 ? '#FFD700' : '#fff'};">
+                            ${p.score}/50
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ============================================
+        // ADMIN PANEL FUNCTIONS
+        // ============================================
+        let adminClickCount = 0;
+        let adminClickTimer = null;
+
+        function handleAdminClick() {
+            adminClickCount++;
+            if (adminClickTimer) clearTimeout(adminClickTimer);
+            adminClickTimer = setTimeout(() => adminClickCount = 0, 3000);
+            
+            if (adminClickCount >= 5) {
+                adminClickCount = 0;
+                const pass = prompt('Password Admin Panel:');
+                if (pass === ADMIN_PASSWORD) {
+                    document.getElementById('adminPanel').classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    renderAdminPanel();
+                }
+            }
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminPanel').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function switchTryOut(toNum) {
+            currentAdminView = toNum;
+            document.getElementById('btnTO1').style.background = toNum === 1 ? '#667eea' : 'rgba(255,255,255,0.2)';
+            document.getElementById('btnTO2').style.background = toNum === 2 ? '#667eea' : 'rgba(255,255,255,0.2)';
+            renderAdminPanel();
+        }
+
+        function renderAdminPanel() {
+            const storageKey = currentAdminView === 2 ? 'tryout_2_results' : 'tryout_results';
+            const results = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            const tbody = document.getElementById('resultsTableBody');
+            
+            document.getElementById('adminPanelTitle').innerHTML = `<i class="fas fa-lock"></i> Hasil TO ${currentAdminView}`;
+            
+            if (results.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 30px;">Belum ada data TO ${currentAdminView}</td></tr>`;
+                return;
+            }
+            
+            tbody.innerHTML = results.map((r, i) => `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td>${r.name}</td>
+                    <td>${r.time}</td>
+                    <td>${r.score}/50</td>
+                    <td>${r.status || 'Complete'}</td>
+                </tr>
+            `).join('');
+        }
+
+        function exportToCSV() {
+            const storageKey = currentAdminView === 2 ? 'tryout_2_results' : 'tryout_results';
+            const results = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            
+            if (results.length === 0) {
+                alert(`Tidak ada data TO ${currentAdminView} untuk diexport!`);
+                return;
+            }
+
+            let csv = 'No,Nama,Waktu Submit,Skor,Status\n';
+            results.forEach((r, index) => {
+                csv += (index + 1) + ',"' + r.name + '","' + r.time + '",' + r.score + ',' + (r.status || 'Complete') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `hasil_tryout_${currentAdminView}_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+        }
+
+        window.resetLeaderboard = function() {
+            const storageKey = currentAdminView === 2 ? 'tryout_2_results' : 'tryout_results';
+            if (confirm(`⚠️ Yakin ingin menghapus SEMUA data TO ${currentAdminView}?\n\nTindakan ini tidak bisa dibatalkan!`)) {
+                localStorage.removeItem(storageKey);
+                alert(`✅ Data TO ${currentAdminView} berhasil direset!`);
+                renderAdminPanel();
+                renderLeaderboard();
+            }
+        };
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('inputName')
+            ?.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') verifyName();
+            });
+            
+            document.getElementById('inputCode')?.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') verifyCode();
+            });
+            
+            document.getElementById('inputPassword')?.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') verifyPassword();
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeAccessModal();
+                    closePricingModal();
+                    closeWhitelistAdmin();
+                }
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                const formulas = document.querySelectorAll('.math-formula');
+                const mouseX = e.clientX / window.innerWidth;
+                const mouseY = e.clientY / window.innerHeight;
+                
+                formulas.forEach(function(formula, index) {
+                    const speed = (index % 3 + 1) * 0.5;
+                    const x = (mouseX - 0.5) * speed * 20;
+                    const y = (mouseY - 0.5) * speed * 20;
+                    formula.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+                });
+            });
+        });
+
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
