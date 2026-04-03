@@ -584,6 +584,35 @@
             color: #e74c3c;
             border: 1px solid #e74c3c;
         }
+
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            color: #aaa;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(255,255,255,0.05);
+            color: white;
+        }
     </style>
 </head>
 <body class="text-white relative">
@@ -656,13 +685,13 @@
             </div>
 
             <!-- Try Out 2 -->
-            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 hover:scale-105 transition-transform cursor-pointer group" onclick="comingSoon(2)">
+            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 hover:scale-105 transition-transform cursor-pointer group" onclick="openWhitelistModal(2)">
                 <div class="relative w-44 h-44 md:w-52 md:h-52">
-                    <div class="diamond w-full h-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-2xl group-hover:shadow-violet-500/50 opacity-60">
+                    <div class="diamond w-full h-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-2xl group-hover:shadow-violet-500/50">
                         <div class="text-center">
                             <div class="text-4xl md:text-5xl font-bold mb-1">2</div>
                             <div class="text-sm md:text-base font-medium">Try Out 2</div>
-                            <div class="text-xs mt-1 text-white/60">Segera</div>
+                            <div class="text-xs mt-1 text-green-400">Aktif</div>
                         </div>
                     </div>
                 </div>
@@ -764,7 +793,7 @@
             <!-- STEP 1: Nama -->
             <div class="whitelist-step active" id="step1">
                 <div class="text-center mb-6">
-                    <div class="price-tag">Try Out 1 - Rp 10.000</div>
+                    <div class="price-tag" id="modalPriceTag">Try Out 1 - Rp 10.000</div>
                     <h2 class="text-2xl font-bold mb-2">Verifikasi Peserta</h2>
                     <p class="text-gray-400">Masukkan nama lengkap Anda sesuai pendaftaran</p>
                 </div>
@@ -781,7 +810,7 @@
             <!-- STEP 2: Kode Unik -->
             <div class="whitelist-step" id="step2">
                 <div class="text-center mb-6">
-                    <div class="price-tag">Try Out 1 - Rp 10.000</div>
+                    <div class="price-tag" id="modalPriceTag2">Try Out 1 - Rp 10.000</div>
                     <h2 class="text-2xl font-bold mb-2">Verifikasi Kode</h2>
                     <p class="text-gray-400">Masukkan kode unik yang diberikan admin</p>
                 </div>
@@ -802,7 +831,7 @@
             <!-- STEP 3: Password -->
             <div class="whitelist-step" id="step3">
                 <div class="text-center mb-6">
-                    <div class="price-tag">Try Out 1 - Rp 10.000</div>
+                    <div class="price-tag" id="modalPriceTag3">Try Out 1 - Rp 10.000</div>
                     <h2 class="text-2xl font-bold mb-2">Password Try Out</h2>
                     <p class="text-gray-400">Masukkan password dari grup WhatsApp</p>
                 </div>
@@ -957,22 +986,28 @@
 
     <!-- ADMIN PANEL (Hasil Ujian) -->
     <div class="admin-panel" id="adminPanel">
-    <div class="dashboard-header">
-    <div class="dashboard-title">
-        <i class="fas fa-lock"></i> Secret Admin Panel
-    </div>
-    <div style="display: flex; gap: 10px;">
-        <button onclick="resetLeaderboard()" class="back-btn" style="background: #e74c3c;">
-            <i class="fas fa-trash"></i> Reset Data
-        </button>
-        <button onclick="exportToCSV()" class="back-btn" style="background: #4ECDC4;">
-            <i class="fas fa-download"></i> Export CSV
-        </button>
-        <button onclick="closeAdminPanel()" class="back-btn">
-            <i class="fas fa-times"></i> Tutup
-        </button>
-    </div>
-</div>
+        <div class="dashboard-header">
+            <div class="dashboard-title" id="adminPanelTitle">
+                <i class="fas fa-lock"></i> Secret Admin Panel
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button onclick="switchTryOut(1)" class="back-btn" id="btnTO1" style="background: #667eea;">
+                    <i class="fas fa-list"></i> TO 1
+                </button>
+                <button onclick="switchTryOut(2)" class="back-btn" id="btnTO2">
+                    <i class="fas fa-list"></i> TO 2
+                </button>
+                <button onclick="resetLeaderboard()" class="back-btn" style="background: #e74c3c;">
+                    <i class="fas fa-trash"></i> Reset Data
+                </button>
+                <button onclick="exportToCSV()" class="back-btn" style="background: #4ECDC4;">
+                    <i class="fas fa-download"></i> Export CSV
+                </button>
+                <button onclick="closeAdminPanel()" class="back-btn">
+                    <i class="fas fa-times"></i> Tutup
+                </button>
+            </div>
+        </div>
 
         <div class="results-table">
             <table>
@@ -1002,9 +1037,19 @@
                 </button>
             </div>
 
+            <!-- Tab Switcher -->
+            <div class="tab-container">
+                <button class="tab-btn active" id="tabTO1" onclick="switchAdminTab(1)">
+                    <i class="fas fa-hexagon"></i> Try Out 1
+                </button>
+                <button class="tab-btn" id="tabTO2" onclick="switchAdminTab(2)">
+                    <i class="fas fa-diamond"></i> Try Out 2
+                </button>
+            </div>
+
             <!-- Form Tambah Peserta -->
             <div class="dashboard-card" style="margin-bottom: 20px;">
-                <h3><i class="fas fa-user-plus"></i> Tambah Peserta Baru</h3>
+                <h3 id="addUserTitle"><i class="fas fa-user-plus"></i> Tambah Peserta TO 1</h3>
                 <div style="display: grid; gap: 15px;">
                     <div>
                         <label style="color: #aaa; display: block; margin-bottom: 5px;">Nama Lengkap</label>
@@ -1028,7 +1073,7 @@
 
             <!-- Import/Export -->
             <div class="dashboard-card" style="margin-bottom: 20px;">
-                <h3><i class="fas fa-file-export"></i> Backup & Restore</h3>
+                <h3 id="backupTitle"><i class="fas fa-file-export"></i> Backup & Restore TO 1</h3>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                     <button onclick="exportWhitelist()" class="btn-primary" style="flex: 1; min-width: 200px;">
                         <i class="fas fa-download"></i> Export ke JSON
@@ -1042,7 +1087,7 @@
 
             <!-- Daftar Peserta -->
             <div class="dashboard-card">
-                <h3><i class="fas fa-list"></i> Daftar Peserta Terdaftar (<span id="totalUsers">0</span>)</h3>
+                <h3 id="listTitle"><i class="fas fa-list"></i> Daftar Peserta TO 1 (<span id="totalUsers">0</span>)</h3>
                 <div style="margin-bottom: 15px;">
                     <input type="text" id="searchUser" class="input-field" style="margin: 0;" placeholder="Cari peserta..." oninput="renderUsersList()">
                 </div>
@@ -1056,8 +1101,8 @@
         // KONFIGURASI - EDIT DI SINI
         // ============================================
         
-        // DATABASE PESERTA (Tambahkan di sini)
-        const WHITELISTED_USERS = [
+        // DATABASE PESERTA TO 1 (Whitelist terpisah)
+        const WHITELISTED_USERS_TO1 = [
             { code: '12109856', name: 'AFIDA (1A)' },
             { code: '09156728', name: 'NAJWA (2B)' },
             { code: '56189914', name: 'NADINE (3C)' },
@@ -1075,22 +1120,37 @@
             { code: '11678591', name: 'DHANA (15O)' },
             { code: '31455590', name: 'NAYLA (16P)' },
             { code: '01925541', name: 'KAVIRA (17R)' },
-            { code: '11789052', name: 'RIRIS (18S)' },
-            { code: '98011340', name: 'FELYSA (19T)' },
-            { code: '01982213', name: 'KALISA (20U)' },
-            { code: '11021321', name: 'MAULA (21V)' },
-            { code: '41241332', name: 'KYLA (22W)' },
-            { code: '00299113', name: 'DANI (23X)' },
-            { code: '98711354', name: 'HENDRA (24Y)' },
-            { code: '09113577', name: 'NISA (25Z)' },
-            
         ];
 
-        // PASSWORD TRY OUT (Ganti untuk setiap event)
-        const TRYOUT_PASSWORD = '875611092';
+        // DATABASE PESERTA TO 2 (Whitelist terpisah - nama berbeda!)
+        const WHITELISTED_USERS_TO2 = [
+            { code: 'TO2A001', name: 'DANI (1AA)' },
+            { code: 'TO2A002', name: 'MAULA (2BB)' },
+            { code: 'TO2A003', name: 'ERIN (3CC)' },
+            { code: 'TO2A004', name: 'FELYSA (4DD)' },
+            { code: 'TO2A005', name: 'FIRA (5EE)' },
+            { code: 'TO2A006', name: 'HENDRA (6FF)' },
+            { code: 'TO2A007', name: 'JESSICA (7GG)' },
+            { code: 'TO2A008', name: 'KALISA (8HH)' },
+            { code: 'TO2A009', name: 'KAVIRAH (9II)' },
+            { code: 'TO2A010', name: 'KYLA (10JJ)' },
+            { code: 'TO2A010', name: 'MAYA (11KK)' },
+            { code: 'TO2A010', name: 'NADINE (12LL)' },
+            { code: 'TO2A010', name: 'NAY (13MM)' },
+            { code: 'TO2A010', name: 'NISA (14NN)' },
+            { code: 'TO2A010', name: 'REZA (15OO)' },
+            { code: 'TO2A010', name: 'RIRIS (16PP)' },
+            { code: 'TO2A010', name: 'SALSA (17QQ)' },
+            { code: 'TO2A010', name: 'NAYLA (18RR)' },
+        ];
 
-        // URL WEBSITE TRY OUT (GANTI DENGAN URL ANDA)
+        // PASSWORD TRY OUT
+        const TRYOUT_PASSWORD = '875611092';           // Password TO 1
+        const TRYOUT_2_PASSWORD = '917055432';      // Password TO 2
+
+        // URL WEBSITE TRY OUT
         const TRYOUT_URL = 'https://farras-tbz.github.io/SOAL-TRY-OUT-1/';
+        const TRYOUT_2_URL = 'https://farras-tbz.github.io/SOAL-TRY-OUT-2/';
 
         // PASSWORD ADMIN
         const ADMIN_PASSWORD = 'wrosn26admin123';
@@ -1102,33 +1162,40 @@
         let currentStep = 1;
         let verifiedUser = null;
         let currentTryOut = 1;
+        let currentAdminView = 1;
+        let currentAdminTab = 1;
 
         // ============================================
-        // LOAD WHITELIST FROM STORAGE
+        // GET WHITELIST BY TO NUMBER
         // ============================================
-        function loadWhitelistFromStorage() {
-            const saved = localStorage.getItem('tryout_whitelist');
+        function getWhitelist(toNum) {
+            const storageKey = toNum === 2 ? 'tryout_whitelist_to2' : 'tryout_whitelist_to1';
+            const defaultList = toNum === 2 ? WHITELISTED_USERS_TO2 : WHITELISTED_USERS_TO1;
+            
+            const saved = localStorage.getItem(storageKey);
             if (saved) {
-                const parsed = JSON.parse(saved);
-                parsed.forEach(u => {
-                    if (!WHITELISTED_USERS.some(existing => existing.code === u.code)) {
-                        WHITELISTED_USERS.push(u);
-                    }
-                });
+                return JSON.parse(saved);
             }
+            return [...defaultList]; // Return copy of default
         }
 
-        function saveWhitelistToStorage() {
-            localStorage.setItem('tryout_whitelist', JSON.stringify(WHITELISTED_USERS));
+        function saveWhitelist(toNum, list) {
+            const storageKey = toNum === 2 ? 'tryout_whitelist_to2' : 'tryout_whitelist_to1';
+            localStorage.setItem(storageKey, JSON.stringify(list));
         }
-
-        loadWhitelistFromStorage();
 
         // ============================================
         // WHITELIST MODAL FUNCTIONS
         // ============================================
         function openWhitelistModal(tryOutNum) {
             currentTryOut = tryOutNum;
+            
+            // Update label harga di modal
+            const priceText = `Try Out ${tryOutNum} - Rp 10.000`;
+            document.getElementById('modalPriceTag').textContent = priceText;
+            document.getElementById('modalPriceTag2').textContent = priceText;
+            document.getElementById('modalPriceTag3').textContent = priceText;
+            
             document.getElementById('accessModal').classList.add('active');
             document.body.style.overflow = 'hidden';
             goToStep(1);
@@ -1173,10 +1240,12 @@
                 return;
             }
             
-            const user = WHITELISTED_USERS.find(u => u.name.toLowerCase() === name);
+            // Cek di whitelist sesuai nomor TO
+            const whitelist = getWhitelist(currentTryOut);
+            const user = whitelist.find(u => u.name.toLowerCase() === name);
             
             if (!user) {
-                showError(errorEl, 'Nama tidak terdaftar! Silakan hubungi admin.');
+                showError(errorEl, `Nama tidak terdaftar di Try Out ${currentTryOut}! Silakan hubungi admin.`);
                 shakeModal();
                 return;
             }
@@ -1218,7 +1287,10 @@
                 return;
             }
             
-            if (password !== TRYOUT_PASSWORD) {
+            // Cek password berdasarkan nomor try out
+            const correctPassword = currentTryOut === 2 ? TRYOUT_2_PASSWORD : TRYOUT_PASSWORD;
+            
+            if (password !== correctPassword) {
                 showError(errorEl, 'Password salah!');
                 return;
             }
@@ -1243,9 +1315,13 @@
                 n: verifiedUser.name,
                 c: verifiedUser.code,
                 t: Date.now(),
-                r: Math.random().toString(36).substring(7)
+                r: Math.random().toString(36).substring(7),
+                to: currentTryOut
             }));
-            window.location.href = TRYOUT_URL + '?token=' + token;
+            
+            // Pilih URL berdasarkan nomor try out
+            const targetUrl = currentTryOut === 2 ? TRYOUT_2_URL : TRYOUT_URL;
+            window.location.href = targetUrl + '?token=' + token;
         }
 
         // ============================================
@@ -1259,7 +1335,7 @@
             }
             document.getElementById('whitelistAdminPanel').classList.add('active');
             document.body.style.overflow = 'hidden';
-            renderUsersList();
+            switchAdminTab(1); // Default ke TO1
         }
 
         function closeWhitelistAdmin() {
@@ -1267,14 +1343,36 @@
             document.body.style.overflow = 'auto';
         }
 
+        function switchAdminTab(toNum) {
+            currentAdminTab = toNum;
+            
+            // Update tab UI
+            document.getElementById('tabTO1').classList.toggle('active', toNum === 1);
+            document.getElementById('tabTO2').classList.toggle('active', toNum === 2);
+            
+            // Update titles
+            document.getElementById('addUserTitle').innerHTML = `<i class="fas fa-user-plus"></i> Tambah Peserta TO ${toNum}`;
+            document.getElementById('backupTitle').innerHTML = `<i class="fas fa-file-export"></i> Backup & Restore TO ${toNum}`;
+            document.getElementById('listTitle').innerHTML = `<i class="fas fa-list"></i> Daftar Peserta TO ${toNum} (<span id="totalUsers">0</span>)`;
+            
+            // Clear inputs
+            document.getElementById('newUserName').value = '';
+            document.getElementById('newUserCode').value = '';
+            
+            renderUsersList();
+        }
+
         function generateCode() {
-            const prefix = 'OSN2024_';
-            const randomNum = Math.floor(100 + Math.random() * 900);
-            const existingCodes = WHITELISTED_USERS.map(u => u.code);
+            const prefix = currentAdminTab === 2 ? 'TO2A' : 'TO1A';
+            const randomNum = String(Math.floor(1 + Math.random() * 999)).padStart(3, '0');
+            const whitelist = getWhitelist(currentAdminTab);
+            const existingCodes = whitelist.map(u => u.code);
+            
             let newCode = prefix + randomNum;
             let counter = 1;
             while (existingCodes.includes(newCode)) {
-                newCode = prefix + (randomNum + counter);
+                const newNum = String(parseInt(randomNum) + counter).padStart(3, '0');
+                newCode = prefix + newNum;
                 counter++;
             }
             document.getElementById('newUserCode').value = newCode;
@@ -1284,6 +1382,7 @@
             const name = document.getElementById('newUserName').value.trim();
             const code = document.getElementById('newUserCode').value.trim().toUpperCase();
             const msgEl = document.getElementById('addUserMessage');
+            const whitelist = getWhitelist(currentAdminTab);
             
             if (!name) {
                 showMessage(msgEl, 'Masukkan nama!', 'error');
@@ -1293,20 +1392,22 @@
                 showMessage(msgEl, 'Masukkan atau generate kode!', 'error');
                 return;
             }
-            if (WHITELISTED_USERS.some(u => u.code === code)) {
+            if (whitelist.some(u => u.code === code)) {
                 showMessage(msgEl, 'Kode sudah digunakan!', 'error');
                 return;
             }
-            if (WHITELISTED_USERS.some(u => u.name.toLowerCase() === name.toLowerCase())) {
+            if (whitelist.some(u => u.name.toLowerCase() === name.toLowerCase())) {
                 showMessage(msgEl, 'Nama sudah terdaftar!', 'error');
                 return;
             }
             
-            WHITELISTED_USERS.push({ code: code, name: name });
-            saveWhitelistToStorage();
+            // Add to current whitelist
+            whitelist.push({ code: code, name: name });
+            saveWhitelist(currentAdminTab, whitelist);
+            
             document.getElementById('newUserName').value = '';
             document.getElementById('newUserCode').value = '';
-            showMessage(msgEl, '✅ ' + name + ' berhasil ditambahkan dengan kode ' + code, 'success');
+            showMessage(msgEl, `✅ ${name} berhasil ditambahkan ke TO ${currentAdminTab} dengan kode ${code}`, 'success');
             renderUsersList();
         }
 
@@ -1319,11 +1420,14 @@
         function renderUsersList() {
             const container = document.getElementById('usersList');
             const search = document.getElementById('searchUser')?.value.toLowerCase() || '';
-            const filtered = WHITELISTED_USERS.filter(u => 
+            const whitelist = getWhitelist(currentAdminTab);
+            
+            const filtered = whitelist.filter(u => 
                 u.name.toLowerCase().includes(search) || 
                 u.code.toLowerCase().includes(search)
             );
-            document.getElementById('totalUsers').textContent = WHITELISTED_USERS.length;
+            
+            document.getElementById('totalUsers').textContent = whitelist.length;
             
             if (filtered.length === 0) {
                 container.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Tidak ada peserta</p>';
@@ -1331,7 +1435,7 @@
             }
             
             container.innerHTML = filtered.map((u, index) => {
-                const actualIndex = WHITELISTED_USERS.indexOf(u);
+                const actualIndex = whitelist.indexOf(u);
                 return `
                     <div class="user-list-item">
                         <div>
@@ -1360,19 +1464,22 @@
         }
 
         function deleteUser(index) {
-            if (!confirm('Yakin hapus ' + WHITELISTED_USERS[index].name + '?')) return;
-            WHITELISTED_USERS.splice(index, 1);
-            saveWhitelistToStorage();
+            const whitelist = getWhitelist(currentAdminTab);
+            if (!confirm(`Yakin hapus ${whitelist[index].name} dari TO ${currentAdminTab}?`)) return;
+            
+            whitelist.splice(index, 1);
+            saveWhitelist(currentAdminTab, whitelist);
             renderUsersList();
         }
 
         function exportWhitelist() {
-            const dataStr = JSON.stringify(WHITELISTED_USERS, null, 2);
+            const whitelist = getWhitelist(currentAdminTab);
+            const dataStr = JSON.stringify(whitelist, null, 2);
             const blob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'whitelist_' + new Date().toISOString().split('T')[0] + '.json';
+            a.download = `whitelist_to${currentAdminTab}_${new Date().toISOString().split('T')[0]}.json`;
             a.click();
             URL.revokeObjectURL(url);
         }
@@ -1380,21 +1487,25 @@
         function importWhitelist(input) {
             const file = input.files[0];
             if (!file) return;
+            
             const reader = new FileReader();
             reader.onload = e => {
                 try {
                     const imported = JSON.parse(e.target.result);
                     if (Array.isArray(imported)) {
+                        const whitelist = getWhitelist(currentAdminTab);
                         let added = 0;
+                        
                         imported.forEach(u => {
-                            if (u.code && u.name && !WHITELISTED_USERS.some(existing => existing.code === u.code)) {
-                                WHITELISTED_USERS.push(u);
+                            if (u.code && u.name && !whitelist.some(existing => existing.code === u.code)) {
+                                whitelist.push(u);
                                 added++;
                             }
                         });
-                        saveWhitelistToStorage();
+                        
+                        saveWhitelist(currentAdminTab, whitelist);
                         renderUsersList();
-                        alert('Berhasil import ' + added + ' peserta!');
+                        alert(`Berhasil import ${added} peserta ke TO ${currentAdminTab}!`);
                     }
                 } catch (err) {
                     alert('File tidak valid!');
@@ -1404,7 +1515,7 @@
             input.value = '';
         }
 
-        // ============================================
+                // ============================================
         // PRICING FUNCTIONS
         // ============================================
         function openPricingModal() {
@@ -1432,181 +1543,120 @@
         }
 
         // ============================================
-// DASHBOARD & LEADERBOARD - PERBAIKAN
-// ============================================
-function openDashboard() {
-    document.getElementById('dashboardContainer').classList.add('active');
-    document.body.style.overflow = 'hidden';
-    renderDashboard();
-}
-
-function closeDashboard() {
-    document.getElementById('dashboardContainer').classList.remove('active');
-    document.body.style.overflow = 'auto';
-}
-
-function openLeaderboard() {
-    document.getElementById('leaderboardContainer').classList.add('active');
-    document.body.style.overflow = 'hidden';
-    renderLeaderboard();
-}
-
-function closeLeaderboard() {
-    document.getElementById('leaderboardContainer').classList.remove('active');
-    document.body.style.overflow = 'auto';
-}
-
-// PERBAIKAN: Render Dashboard dengan data real
-function renderDashboard() {
-    // PERBAIKAN: Ambil data dari localStorage dengan key yang benar
-    const allResults = JSON.parse(localStorage.getItem('tryout_results') || '[]');
-    
-    // Cari data peserta yang sedang login (jika ada)
-    // Atau tampilkan semua data untuk admin view
-    const currentUser = sessionStorage.getItem('currentUser') || '';
-    
-    // Filter hasil untuk user ini (jika perlu)
-    const userResults = allResults.filter(r => r.name === currentUser);
-    
-    // Hitung statistik
-    const bestResult = userResults.length > 0 
-        ? userResults.reduce((max, r) => r.score > max.score ? r : max, userResults[0])
-        : null;
-    
-    // Update tampilan
-    document.getElementById('myTotalScore').textContent = bestResult ? bestResult.score : '0';
-    
-    // Hitung ranking
-    const sortedResults = [...allResults].sort((a, b) => b.score - a.score);
-    const userRank = bestResult ? sortedResults.findIndex(r => r.timestamp === bestResult.timestamp) + 1 : '-';
-    document.getElementById('myRank').textContent = userRank !== '-' ? '#' + userRank : '-';
-    
-    // Render riwayat
-    const historyList = document.getElementById('historyList');
-    if (userResults.length === 0) {
-        historyList.innerHTML = `
-            <div style="text-align: center; padding: 40px; color: #888;">
-                <i class="fas fa-inbox" style="font-size: 3em; margin-bottom: 15px; display: block;"></i>
-                Belum ada riwayat ujian.<br>
-                <small style="display: block; margin-top: 10px;">
-                    Pastikan Anda sudah menyelesaikan try out.
-                </small>
-                <button onclick="checkDataDebug()" style="margin-top: 15px; padding: 8px 16px; background: rgba(102, 126, 234, 0.2); border: 1px solid #667eea; color: #667eea; border-radius: 8px; cursor: pointer; font-size: 0.9em;">
-                    <i class="fas fa-bug"></i> Cek Data
-                </button>
-            </div>
-        `;
-    } else {
-        historyList.innerHTML = userResults.map(r => `
-            <div class="history-item">
-                <div>
-                    <div style="font-weight: 600;">${r.name}</div>
-                    <div style="font-size: 0.8em; color: #888;">${r.time}</div>
-                    <div style="font-size: 0.75em; color: #4ECDC4; margin-top: 4px;">
-                        PG: ${r.pgCorrect || '-'}/10 | Isian: ${r.isianCorrect || '-'}/10
-                    </div>
-                </div>
-                <div style="text-align: right;">
-                    <div style="font-size: 1.5em; font-weight: bold; color: ${r.score >= 40 ? '#4ECDC4' : r.score >= 25 ? '#fbbf24' : '#e74c3c'};">
-                        ${r.score}/50
-                    </div>
-                    <div style="font-size: 0.75em; color: #888; margin-top: 4px;">
-                        ${r.status || 'Complete'}
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-}
-
-// PERBAIKAN: Render Leaderboard dengan data real
-function renderLeaderboard() {
-    const container = document.getElementById('top10List');
-    
-    // PERBAIKAN: Ambil data dari localStorage
-    let data = JSON.parse(localStorage.getItem('tryout_results') || '[]');
-    
-    console.log('Leaderboard data:', data); // Debug
-    
-    if (data.length === 0) {
-        container.innerHTML = `
-            <div style="text-align: center; padding: 40px; color: #888;">
-                <i class="fas fa-inbox" style="font-size: 3em; margin-bottom: 15px; display: block;"></i>
-                Belum ada data hasil ujian.<br>
-                <small style="display: block; margin-top: 10px;">
-                    Data akan muncul setelah peserta menyelesaikan try out.
-                </small>
-                <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px; font-size: 0.85em; text-align: left;">
-                    <strong style="color: #667eea;">Troubleshooting:</strong><br>
-                    1. Pastikan peserta mengklik "Kumpulkan Jawaban"<br>
-                    2. Cek browser tidak di incognito/private mode<br>
-                    3. Data tersimpan di browser yang sama
-                </div>
-                <button onclick="checkDataDebug()" style="margin-top: 15px; padding: 10px 20px; background: rgba(102, 126, 234, 0.2); border: 1px solid #667eea; color: #667eea; border-radius: 8px; cursor: pointer;">
-                    <i class="fas fa-bug"></i> Debug: Lihat Data Tersimpan
-                </button>
-            </div>
-        `;
-        return;
-    }
-    
-    // Sort by score descending
-    data.sort((a, b) => b.score - a.score);
-    
-    // Ambil top 10 unik (nama unik, nilai tertinggi)
-    const uniqueNames = new Set();
-    const top10 = [];
-    
-    for (const item of data) {
-        if (!uniqueNames.has(item.name)) {
-            uniqueNames.add(item.name);
-            top10.push(item);
-            if (top10.length >= 10) break;
+        // DASHBOARD & LEADERBOARD
+        // ============================================
+        function openDashboard() {
+            document.getElementById('dashboardContainer').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            renderDashboard();
         }
-    }
-    
-    container.innerHTML = top10.map((p, i) => {
-        const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
-        const medal = i === 0 ? '👑' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
-        return `
-            <div class="leaderboard-item">
-                <div class="leaderboard-rank ${rankClass}">${medal}</div>
-                <div style="flex: 1;">
-                    <div style="font-weight: 600;">${p.name}</div>
-                    <div style="font-size: 0.8em; color: #888;">
-                        PG: ${p.pgCorrect || '-'}/10 • Isian: ${p.isianCorrect || '-'}/10
-                    </div>
-                </div>
-                <div style="background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 20px; font-weight: bold; color: ${i < 3 ? '#FFD700' : '#fff'};">
-                    ${p.score}/50
-                </div>
-            </div>
-        `;
-    }).join('');
-}
 
-// FUNGSI DEBUG - Tambahkan ini juga
-function checkDataDebug() {
-    const data = localStorage.getItem('tryout_results');
-    if (!data) {
-        alert('TIDAK ADA DATA di localStorage!\n\nKemungkinan penyebab:\n1. Peserta belum submit\n2. Browser incognito mode\n3. Data dihapus\n4. Domain berbeda (http vs https)');
-        return;
-    }
-    
-    const parsed = JSON.parse(data);
-    let msg = `DITEMUKAN ${parsed.length} RECORD:\n\n`;
-    
-    parsed.forEach((r, i) => {
-        msg += `${i+1}. ${r.name}: ${r.score}/50 (${r.time})\n`;
-    });
-    
-    msg += '\nLihat console untuk detail lengkap.';
-    console.log('Full data:', parsed);
-    alert(msg);
-}
+        function closeDashboard() {
+            document.getElementById('dashboardContainer').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function openLeaderboard() {
+            document.getElementById('leaderboardContainer').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            renderLeaderboard();
+        }
+
+        function closeLeaderboard() {
+            document.getElementById('leaderboardContainer').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function renderDashboard() {
+            const to1Results = JSON.parse(localStorage.getItem('tryout_results') || '[]');
+            const to2Results = JSON.parse(localStorage.getItem('tryout_2_results') || '[]');
+            
+            // Gabungkan semua hasil
+            const allUserResults = [...to1Results, ...to2Results];
+            const currentUser = sessionStorage.getItem('currentUser') || '';
+            const userResults = allUserResults.filter(r => r.name === currentUser);
+            
+            const bestResult = userResults.length > 0 
+                ? userResults.reduce((max, r) => r.score > max.score ? r : max, userResults[0])
+                : null;
+            
+            document.getElementById('myTotalScore').textContent = bestResult ? bestResult.score : '0';
+            
+            const sortedResults = [...allUserResults].sort((a, b) => b.score - a.score);
+            const userRank = bestResult ? sortedResults.findIndex(r => r.name === bestResult.name && r.score === bestResult.score) + 1 : '-';
+            document.getElementById('myRank').textContent = userRank !== '-' ? '#' + userRank : '-';
+            
+            const historyList = document.getElementById('historyList');
+            if (userResults.length === 0) {
+                historyList.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Belum ada riwayat</p>';
+            } else {
+                historyList.innerHTML = userResults.map(r => `
+                    <div class="history-item">
+                        <div>
+                            <div style="font-weight: 600;">${r.name}</div>
+                            <div style="font-size: 0.8em; color: #888;">${r.time}</div>
+                            <div style="font-size: 0.75em; color: #4ECDC4;">TO${r.tryOut || 1}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.3em; font-weight: bold; color: #4ECDC4;">${r.score}/50</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderLeaderboard() {
+            const container = document.getElementById('top10List');
+            const to1Results = JSON.parse(localStorage.getItem('tryout_results') || '[]');
+            const to2Results = JSON.parse(localStorage.getItem('tryout_2_results') || '[]');
+            
+            // Gabungkan dan ambil nilai tertinggi per peserta
+            const combined = {};
+            [...to1Results, ...to2Results].forEach(r => {
+                if (!combined[r.name] || combined[r.name].score < r.score) {
+                    combined[r.name] = r;
+                }
+            });
+            
+            let data = Object.values(combined);
+            
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #888;">
+                        <i class="fas fa-inbox" style="font-size: 3em; margin-bottom: 15px; display: block;"></i>
+                        Belum ada data hasil ujian.<br>
+                        <small>Data akan muncul setelah peserta menyelesaikan try out.</small>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort by score descending
+            data.sort((a, b) => b.score - a.score);
+            
+            // Ambil top 10
+            const top10 = data.slice(0, 10);
+            
+            container.innerHTML = top10.map((p, i) => {
+                const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
+                const medal = i === 0 ? '👑' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+                return `
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank ${rankClass}">${medal}</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600;">${p.name}</div>
+                            <div style="font-size: 0.8em; color: #888;">${p.time || '-'}</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 20px; font-weight: bold; color: ${i < 3 ? '#FFD700' : '#fff'};">
+                            ${p.score}/50
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
 
         // ============================================
-        // ADMIN PANEL (Hasil Ujian)
+        // ADMIN PANEL FUNCTIONS
         // ============================================
         let adminClickCount = 0;
         let adminClickTimer = null;
@@ -1632,12 +1682,22 @@ function checkDataDebug() {
             document.body.style.overflow = 'auto';
         }
 
+        function switchTryOut(toNum) {
+            currentAdminView = toNum;
+            document.getElementById('btnTO1').style.background = toNum === 1 ? '#667eea' : 'rgba(255,255,255,0.2)';
+            document.getElementById('btnTO2').style.background = toNum === 2 ? '#667eea' : 'rgba(255,255,255,0.2)';
+            renderAdminPanel();
+        }
+
         function renderAdminPanel() {
-            const results = JSON.parse(localStorage.getItem('tryout_results') || '[]');
+            const storageKey = currentAdminView === 2 ? 'tryout_2_results' : 'tryout_results';
+            const results = JSON.parse(localStorage.getItem(storageKey) || '[]');
             const tbody = document.getElementById('resultsTableBody');
             
+            document.getElementById('adminPanelTitle').innerHTML = `<i class="fas fa-lock"></i> Hasil TO ${currentAdminView}`;
+            
             if (results.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 30px;">Belum ada data</td></tr>';
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 30px;">Belum ada data TO ${currentAdminView}</td></tr>`;
                 return;
             }
             
@@ -1653,9 +1713,11 @@ function checkDataDebug() {
         }
 
         function exportToCSV() {
-            const results = JSON.parse(localStorage.getItem('tryout_results') || '[]');
+            const storageKey = currentAdminView === 2 ? 'tryout_2_results' : 'tryout_results';
+            const results = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            
             if (results.length === 0) {
-                alert('Tidak ada data untuk diexport!');
+                alert(`Tidak ada data TO ${currentAdminView} untuk diexport!`);
                 return;
             }
 
@@ -1667,19 +1729,17 @@ function checkDataDebug() {
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = 'hasil_tryout_' + new Date().toISOString().split('T')[0] + '.csv';
+            link.download = `hasil_tryout_${currentAdminView}_${new Date().toISOString().split('T')[0]}.csv`;
             link.click();
         }
 
-        // ============================================
-        // RESET LEADERBOARD FUNCTION
-        // ============================================
         window.resetLeaderboard = function() {
-            if (confirm('⚠️ Yakin ingin menghapus SEMUA data leaderboard?\nTindakan ini tidak bisa dibatalkan!')) {
-                localStorage.removeItem('tryout_results');
-                alert('✅ Data leaderboard berhasil direset!');
-                if (typeof renderAdminPanel === 'function') renderAdminPanel();
-                if (typeof renderLeaderboard === 'function') renderLeaderboard();
+            const storageKey = currentAdminView === 2 ? 'tryout_2_results' : 'tryout_results';
+            if (confirm(`⚠️ Yakin ingin menghapus SEMUA data TO ${currentAdminView}?\n\nTindakan ini tidak bisa dibatalkan!`)) {
+                localStorage.removeItem(storageKey);
+                alert(`✅ Data TO ${currentAdminView} berhasil direset!`);
+                renderAdminPanel();
+                renderLeaderboard();
             }
         };
 
@@ -1687,7 +1747,8 @@ function checkDataDebug() {
         // EVENT LISTENERS
         // ============================================
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('inputName')?.addEventListener('keypress', function(e) {
+            document.getElementById('inputName')
+            ?.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') verifyName();
             });
             
