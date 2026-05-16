@@ -528,6 +528,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -620,7 +621,7 @@
                 <h3>Try Out 3</h3>
                 <div class="price-tag">Rp 10.000</div>
                 <p>Akses penuh soal + pembahasan</p>
-                <span style="display:block;width:100%;padding:12px;background:#999;color:white;border-radius:8px;font-size:15px;font-weight:bold;text-align:center;">COMING SOON</span>
+                <a class="price-btn" href="https://wa.me/6287765692166?text=Halo%2C%20saya%20ingin%20pesan%20Try%20Out%203%20Wrosify" target="_blank">Pesan via WhatsApp</a>
             </div>
             <div class="price-card">
                 <h3>Try Out 4</h3>
@@ -736,6 +737,12 @@
                         { code: '8761109', name: 'ABDUL (6F)' },
         ];
 
+        // DATABASE PESERTA TO 3 (Whitelist terpisah)
+        const WHITELISTED_USERS_TO3 = [
+            // Tambahkan peserta TO 3 di sini
+            // Format: { code: 'KODE', name: 'NAMA' },
+        ];
+
         // DATABASE PESERTA TO 2 (Whitelist terpisah - nama berbeda!)
         const WHITELISTED_USERS_TO2 = [
                         { code: '9187542', name: 'DANI (1AA)' },
@@ -765,26 +772,22 @@
                         { code: '1675002', name: 'ECY (25YY)' },
                         { code: '0918113', name: 'ABDUL (26ZZ)' },
         ];
-
-         // DATABASE PESERTA TO 3 (Whitelist terpisah - nama berbeda!)
-        const WHITELISTED_USERS_TO3 = [
-                        { code: '9187542', name: 'DANI (1AA)' },
-            ];
         
         // PASSWORD TRY OUT
         const TRYOUT_PASSWORD = '875611092';
         const TRYOUT_2_PASSWORD = '917055432';
-        const TRYOUT_3_PASSWORD = '667198352';
+        const TRYOUT_3_PASSWORD = '123456789'; // GANTI DENGAN PASSWORD TO 3
 
         // URL WEBSITE TRY OUT (GitHub Pages)
         const TRYOUT_URL = 'https://farras-tbz.github.io/SOAL-TRY-OUT-1/';
         const TRYOUT_2_URL = 'https://farras-tbz.github.io/SOAL-TRY-OUT-2/';
-         const TRYOUT_3_URL = 'https://farras-tbz.github.io/Try-Out-3-Soal/';
+        const TRYOUT_3_URL = 'https://farras-tbz.github.io/Try-Out-3-Soal/';
 
         // Build whitelist object untuk kompatibilitas
         const whitelist = {
             1: WHITELISTED_USERS_TO1.map(u => ({name: u.name, kode: u.code})),
-            2: WHITELISTED_USERS_TO2.map(u => ({name: u.name, kode: u.code}))
+            2: WHITELISTED_USERS_TO2.map(u => ({name: u.name, kode: u.code})),
+            3: WHITELISTED_USERS_TO3.map(u => ({name: u.name, kode: u.code}))
         };
         const kodeTO = { 1: TRYOUT_PASSWORD, 2: TRYOUT_2_PASSWORD, 3: TRYOUT_3_PASSWORD };
         
@@ -913,6 +916,8 @@
                     targetUrl = 'https://farras-tbz.github.io/SOAL-TRY-OUT-1/?token=' + token;
                 } else if (currentTO === 2) {
                     targetUrl = 'https://farras-tbz.github.io/SOAL-TRY-OUT-2/?token=' + token;
+                } else if (currentTO === 3) {
+                    targetUrl = 'https://farras-tbz.github.io/Try-Out-3-Soal/?token=' + token;
                 } else {
                     alert('Try Out ' + currentTO + ' belum tersedia!');
                     return false;
