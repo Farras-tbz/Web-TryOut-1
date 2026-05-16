@@ -689,23 +689,67 @@
     </a>
 
     <script>
+        // ============================================
+        // DATABASE PESERTA (Plain - Mudah Edit)
+        // ============================================
+
+        // CARA TAMBAH AKUN:
+        // 1. Copy format: {code:'KODE', name:'NAMA'},
+        // 2. Paste di array bawah, sebelum kurung siku tutup ]
+        // 3. Pastikan ada koma di akhir setiap baris KECUALI baris terakhir
+
+        const WHITELISTED_USERS_TO1 = [
+            { code: '12109856', name: 'AFIDA (1A)' },
+            { code: '09156728', name: 'NAJWA (2B)' },
+            { code: '56189914', name: 'NADINE (3C)' },
+            { code: '00592178', name: 'ERIN (4D)' },
+            { code: '81792443', name: 'FIRA (5E)' },
+            { code: '19847652', name: 'BAGAS (6F)' },
+            { code: '76518423', name: 'NAILAH (7G)' },
+            { code: '11098762', name: 'SALSA (8H)' },
+            { code: '56718293', name: 'MAYA (9I)' },
+            { code: '87652113', name: 'REZA (10J)' },
+            { code: '35672119', name: 'SYIFA (11K)' },
+            { code: '81907568', name: 'PRIYO (12L)' },
+            { code: '01987551', name: 'JESSYCA (13M)' },
+            { code: '55671880', name: 'BASIT (14N)' },
+            { code: '11678591', name: 'DHANA (15O)' },
+            { code: '31455590', name: 'NAYLA (16P)' },
+            { code: '01925541', name: 'KAVIRA (17R)' },
+        ];
+
+        const WHITELISTED_USERS_TO2 = [
+            { code: '9187542', name: 'DANI (1AA)' },
+            { code: '5541322', name: 'MAULA (2BB)' },
+            { code: '1109784', name: 'ERIN (3CC)' },
+            { code: '8871099', name: 'FELYSA (4DD)' },
+            { code: '6159224', name: 'FIRA (5EE)' },
+            { code: '5019371', name: 'HENDRA (6FF)' },
+            { code: '0019758', name: 'JESSICA (7GG)' },
+            { code: '3319002', name: 'KALISA (8HH)' },
+            { code: '2766511', name: 'KAVIRAH (9II)' },
+            { code: '5500123', name: 'KYLA (10JJ)' },
+            { code: '0123994', name: 'MAYA (11KK)' },
+            { code: '4190078', name: 'NADINE (12LL)' },
+            { code: '9178002', name: 'NAY (13MM)' },
+            { code: '5170966', name: 'NISA (14NN)' },
+            { code: '6679100', name: 'REZA (15OO)' },
+            { code: '1100978', name: 'RIRIS (16PP)' },
+            { code: '2019845', name: 'SALSA (17QQ)' },
+            { code: '8179092', name: 'NAYLA (18RR)' },
+        ];
+
+        // PASSWORD TRY OUT
+        const TRYOUT_PASSWORD = '875611092';
+        const TRYOUT_2_PASSWORD = '917055432';
+
+        // Build whitelist object untuk kompatibilitas
         const whitelist = {
-            1: [
-                {nama: "Ahmad Fauzi", kode: "AF2024TO1"},
-                {nama: "Budi Santoso", kode: "BS2024TO1"},
-                {nama: "Citra Lestari", kode: "CL2024TO1"},
-                {nama: "Dewi Anggraini", kode: "DA2024TO1"},
-                {nama: "Eko Prasetyo", kode: "EP2024TO1"}
-            ],
-            2: [
-                {nama: "Ahmad Fauzi", kode: "AF2024TO2"},
-                {nama: "Budi Santoso", kode: "BS2024TO2"},
-                {nama: "Citra Lestari", kode: "CL2024TO2"},
-                {nama: "Dewi Anggraini", kode: "DA2024TO2"},
-                {nama: "Eko Prasetyo", kode: "EP2024TO2"}
-            ]
+            1: WHITELISTED_USERS_TO1.map(u => ({name: u.name, kode: u.code})),
+            2: WHITELISTED_USERS_TO2.map(u => ({name: u.name, kode: u.code}))
         };
-        const kodeTO = { 1: "875611092", 2: "917055432" };
+        const kodeTO = { 1: TRYOUT_PASSWORD, 2: TRYOUT_2_PASSWORD };
+        
         let currentTO = 0;
         let timerInterval;
 
@@ -783,7 +827,7 @@
             const nama = document.getElementById('regNama').value.trim();
             const kode = document.getElementById('regKode').value.trim();
             const list = whitelist[currentTO] || [];
-            const found = list.find(u => u.nama.toLowerCase() === nama.toLowerCase() && u.kode === kode);
+            const found = list.find(u => u.name.toLowerCase() === nama.toLowerCase() && u.kode === kode);
             if (found) {
                 regModal.classList.remove('active');
                 codeModal.classList.add('active');
