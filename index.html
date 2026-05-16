@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <base target="_blank">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -219,6 +220,7 @@
             padding: 0 20px;
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            pointer-events: auto !important;
         }
         .hamburger-btn {
             background: none;
@@ -230,6 +232,15 @@
             gap: 5px;
             z-index: 1001;
             position: relative;
+            pointer-events: auto !important;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .hamburger-btn span {
+            pointer-events: none;
+            display: block;
         }
         .hamburger-btn span {
             display: block;
@@ -524,11 +535,6 @@
             .sun { width: 80px; height: 80px; }
         }
     </style>
-<base target="_blank">
-<base target="_blank">
-<base target="_blank">
-<base target="_blank">
-
 <!-- ANTI-INSPECTION PROTECTION -->
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="googlebot" content="noindex, nofollow, noarchive">
@@ -549,10 +555,15 @@
         -ms-user-select: text;
         user-select: text;
     }
-    /* Anti drag */
-    img, svg, a, button {
+    /* Anti drag - allow buttons to be clickable */
+    img, svg, a {
         -webkit-user-drag: none;
         user-drag: none;
+    }
+    button {
+        -webkit-user-drag: none;
+        user-drag: none;
+        pointer-events: auto !important;
     }
 </style>
 <script>
@@ -629,18 +640,26 @@
         }, true);
     });
 
-    // 7. ANTI DRAG
+    // 7. ANTI DRAG - but allow on buttons
     document.addEventListener('dragstart', function(e) {
+        var tag = e.target.tagName.toLowerCase();
+        if (tag === 'button' || tag === 'a') return true;
         e.preventDefault();
         e.stopPropagation();
         return false;
     }, true);
 
-    // 8. ANTI MOUSE SELECTION (middle click, etc)
+    // 8. ANTI MOUSE SELECTION (middle click, etc) - ALLOW LEFT CLICK
     document.addEventListener('mousedown', function(e) {
+        // Only block middle (1) and right (2) clicks, NEVER block left click (0)
         if (e.button === 1 || e.button === 2) {
             e.preventDefault();
             return false;
+        }
+        // Allow left click to pass through for buttons and interactive elements
+        var tag = e.target.tagName.toLowerCase();
+        if (e.button === 0 && (tag === 'button' || tag === 'a' || tag === 'input')) {
+            return true; // Allow left click on interactive elements
         }
     }, true);
 
@@ -813,7 +832,7 @@
 
     <!-- Navbar -->
     <nav class="navbar">
-        <button class="hamburger-btn" id="hamburgerBtn" type="button" aria-label="Menu">
+        <button class="hamburger-btn" id="hamburgerBtn" type="button" aria-label="Menu" onclick="openSidebar()">
             <span></span>
             <span></span>
             <span></span>
@@ -822,8 +841,8 @@
         <div style="margin-left:auto;color:#333;font-weight:600;font-size:16px;letter-spacing:1px;">Website Try Out</div>
     </nav>
 
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    <div class="sidebar" id="sidebar">
+    <div class="sidebar-overlay" id="sidebarOverlay" style="display: none;"></div>
+    <div class="sidebar" id="sidebar" style="left: -300px; transition: left 0.3s ease;">
         <div class="sidebar-title">Pilih Try Out</div>
         <a class="sidebar-item" data-to="1">Try Out 1</a>
         <a class="sidebar-item" data-to="2">Try Out 2</a>
@@ -1044,10 +1063,14 @@
         const examSection = document.getElementById('examSection');
 
         function openSidebar() {
+            sidebar.style.left = '0';
+            sidebarOverlay.style.display = 'block';
             sidebar.classList.add('active');
             sidebarOverlay.classList.add('active');
         }
         function closeSidebarFn() {
+            sidebar.style.left = '-300px';
+            sidebarOverlay.style.display = 'none';
             sidebar.classList.remove('active');
             sidebarOverlay.classList.remove('active');
         }
@@ -1055,8 +1078,17 @@
         hamburgerBtn.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
+            e.stopImmediatePropagation();
             openSidebar();
+            return false;
         });
+        // Also attach via onclick for maximum compatibility
+        hamburgerBtn.onclick = function(e) {
+            e = e || window.event;
+            if(e) { e.preventDefault(); e.stopPropagation(); }
+            openSidebar();
+            return false;
+        };
         sidebarOverlay.addEventListener('click', closeSidebarFn);
 
         document.querySelectorAll('.sidebar-item:not(.coming-soon)').forEach(item => {
