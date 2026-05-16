@@ -586,7 +586,7 @@
         <div class="sidebar-title">Pilih Try Out</div>
         <a class="sidebar-item" data-to="1">Try Out 1</a>
         <a class="sidebar-item" data-to="2">Try Out 2</a>
-        <a class="sidebar-item coming-soon">Try Out 3 <span class="coming-badge">COMING SOON</span></a>
+        <a class="sidebar-item" data-to="3">Try Out 3</a>
         <a class="sidebar-item coming-soon">Try Out 4 <span class="coming-badge">COMING SOON</span></a>
         <a class="sidebar-item coming-soon">Try Out 5 <span class="coming-badge">COMING SOON</span></a>
     </div>
@@ -765,14 +765,21 @@
                         { code: '1675002', name: 'ECY (25YY)' },
                         { code: '0918113', name: 'ABDUL (26ZZ)' },
         ];
+
+         // DATABASE PESERTA TO 3 (Whitelist terpisah - nama berbeda!)
+        const WHITELISTED_USERS_TO3 = [
+                        { code: '9187542', name: 'DANI (1AA)' },
+            ];
         
         // PASSWORD TRY OUT
         const TRYOUT_PASSWORD = '875611092';
         const TRYOUT_2_PASSWORD = '917055432';
+        const TRYOUT_3_PASSWORD = '667198352';
 
         // URL WEBSITE TRY OUT (GitHub Pages)
         const TRYOUT_URL = 'https://farras-tbz.github.io/SOAL-TRY-OUT-1/';
         const TRYOUT_2_URL = 'https://farras-tbz.github.io/SOAL-TRY-OUT-2/';
+         const TRYOUT_3_URL = 'https://farras-tbz.github.io/Try-Out-3-Soal/';
 
         // Build whitelist object untuk kompatibilitas
         const whitelist = {
