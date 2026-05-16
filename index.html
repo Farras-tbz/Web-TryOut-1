@@ -528,6 +528,247 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+
+<!-- ANTI-INSPECTION PROTECTION -->
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="googlebot" content="noindex, nofollow, noarchive">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; frame-ancestors 'none';">
+<style>
+    /* Anti text selection */
+    body {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+    }
+    /* Allow selection in form inputs */
+    input, textarea, .modal-box, .sidebar, .exam-section {
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+    }
+    /* Anti drag */
+    img, svg, a, button {
+        -webkit-user-drag: none;
+        user-drag: none;
+    }
+</style>
+<script>
+(function() {
+    'use strict';
+
+    // 1. ANTI FILE PROTOCOL
+    if (window.location.protocol === 'file:') {
+        document.body.innerHTML = '<h1 style="text-align:center;margin-top:50px;">This site cannot be opened locally.</h1>';
+        return;
+    }
+
+    // 2. ANTI IFRAME (Frame Busting)
+    if (window.top !== window.self) {
+        window.top.location = window.self.location;
+    }
+
+    // 3. ANTI RIGHT CLICK
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    }, true);
+
+    // 4. ANTI F12
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' || e.keyCode === 123) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    }, true);
+
+    // 5. ANTI DEVTOOLS SHORTCUTS
+    document.addEventListener('keydown', function(e) {
+        // Ctrl+Shift+I (Inspect)
+        // Ctrl+Shift+J (Console)
+        // Ctrl+Shift+C (Inspect Element)
+        // Ctrl+U (View Source)
+        // Ctrl+S (Save)
+        // Ctrl+P (Print)
+        // Ctrl+A (Select All)
+        if (e.ctrlKey) {
+            var blocked = false;
+            if (e.shiftKey && (e.key === 'i' || e.key === 'I' || e.key === 'j' || e.key === 'J' || e.key === 'c' || e.key === 'C')) {
+                blocked = true;
+            }
+            if (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S' || e.key === 'p' || e.key === 'P' || e.key === 'a' || e.key === 'A') {
+                // Allow Ctrl+A only inside inputs
+                var tag = e.target.tagName.toLowerCase();
+                if ((e.key === 'a' || e.key === 'A') && (tag === 'input' || tag === 'textarea' || e.target.isContentEditable)) {
+                    return; // allow in inputs
+                }
+                blocked = true;
+            }
+            if (blocked) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        }
+    }, true);
+
+    // 6. ANTI COPY / CUT / PASTE EVENTS (except in inputs)
+    ['copy', 'cut', 'paste'].forEach(function(evt) {
+        document.addEventListener(evt, function(e) {
+            var tag = e.target.tagName.toLowerCase();
+            if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) {
+                return; // allow in inputs
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }, true);
+    });
+
+    // 7. ANTI DRAG
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    }, true);
+
+    // 8. ANTI MOUSE SELECTION (middle click, etc)
+    document.addEventListener('mousedown', function(e) {
+        if (e.button === 1 || e.button === 2) {
+            e.preventDefault();
+            return false;
+        }
+    }, true);
+
+    // 9. DEBUGGER TRAP - makes DevTools extremely slow
+    setInterval(function() {
+        (function() {}).constructor('debugger')();
+    }, 100);
+
+    // Additional debugger trap
+    function debugTrap() {
+        debugger;
+        setTimeout(debugTrap, 50);
+    }
+    // Only activate if DevTools might be open (detected via size)
+
+    // 10. DEVTOOLS DETECTION via window size
+    var devtoolsOpen = false;
+    var threshold = 160;
+    function checkDevTools() {
+        var widthThreshold = window.outerWidth - window.innerWidth > threshold;
+        var heightThreshold = window.outerHeight - window.innerHeight > threshold;
+        if (widthThreshold || heightThreshold) {
+            if (!devtoolsOpen) {
+                devtoolsOpen = true;
+                // Redirect or freeze
+                document.body.innerHTML = '';
+                window.location.replace('about:blank');
+            }
+        } else {
+            devtoolsOpen = false;
+        }
+    }
+    setInterval(checkDevTools, 500);
+
+    // 11. CONSOLE TIMING TRAP
+    var consoleTrap = function() {
+        var start = performance.now();
+        console.log('%c', 'padding: 0; font-size: 0;');
+        var end = performance.now();
+        if (end - start > 100) {
+            document.body.innerHTML = '';
+            window.location.replace('about:blank');
+        }
+        setTimeout(consoleTrap, 1000);
+    };
+    // consoleTrap(); // Uncomment if needed, can be aggressive
+
+    // 12. CONSOLE OBSCURATION - Disable common console methods
+    var noop = function() {};
+    if (!window.__devmode) {
+        console.log = noop;
+        console.warn = noop;
+        console.info = noop;
+        console.debug = noop;
+        console.table = noop;
+        console.dir = noop;
+        console.trace = noop;
+    }
+
+    // 13. ANTI KEYBOARD SHORTCUTS (Mac)
+    document.addEventListener('keydown', function(e) {
+        if (e.metaKey) {
+            // Cmd+Option+I/J/U etc
+            if (e.key === 'i' || e.key === 'I' || e.key === 'j' || e.key === 'J' || e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S') {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        }
+    }, true);
+
+    // 14. PROTECT GLOBAL VARIABLES
+    try {
+        Object.defineProperty(window, 'WHITELISTED_USERS_TO1', {
+            configurable: false,
+            writable: false
+        });
+        Object.defineProperty(window, 'WHITELISTED_USERS_TO2', {
+            configurable: false,
+            writable: false
+        });
+        Object.defineProperty(window, 'TRYOUT_PASSWORD', {
+            configurable: false,
+            writable: false
+        });
+        Object.defineProperty(window, 'TRYOUT_2_PASSWORD', {
+            configurable: false,
+            writable: false
+        });
+    } catch(e) {}
+
+    // 15. CLEAR CONSOLE ON LOAD
+    console.clear();
+
+    // 16. ANTI VIEW SOURCE via window.open
+    var originalOpen = window.open;
+    window.open = function(url, name, specs) {
+        if (url && (url.includes('view-source') || url.includes('source:'))) {
+            return null;
+        }
+        return originalOpen.apply(this, arguments);
+    };
+
+    // 17. DETECT FIREBUG
+    if (window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) {
+        document.body.innerHTML = '';
+        window.location.replace('about:blank');
+    }
+
+    // 18. ANTI SCREENSHOT / PRINT (CSS only partial, JS block)
+    window.addEventListener('beforeprint', function(e) {
+        e.preventDefault();
+        document.body.innerHTML = '<h1>Printing is disabled.</h1>';
+        return false;
+    });
+
+    // 19. DISABLE CONTEXT MENU ITEMS VIA oncontextmenu on specific elements
+    document.querySelectorAll('img, svg, div, section, nav, header, footer').forEach(function(el) {
+        el.setAttribute('oncontextmenu', 'return false;');
+    });
+
+    // 20. OBSCURE LOCALSTORAGE KEYS
+    // The localStorage usage is kept functional but we can obscure the keys if needed
+    // Currently left as-is to preserve functionality
+
+})();
+</script>
+<base target="_blank">
 </head>
 <body>
 
