@@ -3,1645 +3,847 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRY OUT wrosify - @wrosn26</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Try Out Wrosify</title>
     <style>
-        * { box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Space Grotesk', sans-serif;
-            background: linear-gradient(135deg, #0a0f1a 0%, #1a1f2e 50%, #0f172a 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
+            color: #333;
             overflow-x: hidden;
-            margin: 0;
-            padding: 0;
-            color: white;
         }
 
-        .math-background {
+        /* ===== BACKGROUND SCENE ===== */
+        .bg-scene {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
+            z-index: -1;
             overflow: hidden;
-            pointer-events: none;
-            z-index: 0;
+            background: linear-gradient(180deg, 
+                #ff9a56 0%, 
+                #ff6b6b 25%, 
+                #c44569 50%, 
+                #574b90 75%, 
+                #2c3e50 100%
+            );
         }
-        .math-formula {
+
+        /* Sun */
+        .sun {
             position: absolute;
-            font-family: 'STIX Two Text', 'Noto Serif', serif;
-            color: rgba(255,255,255,0.12);
-            font-size: 1.2rem;
-            font-style: italic;
-            animation: float-math 25s infinite ease-in-out;
-            white-space: nowrap;
-            user-select: none;
-        }
-        .math-formula.large { font-size: 2.2rem; color: rgba(255,255,255,0.18); font-weight: 700; }
-        @keyframes float-math {
-            0%, 100% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0.08; }
-            25% { transform: translateY(-40px) rotate(3deg) translateX(15px); opacity: 0.2; }
-            50% { transform: translateY(-20px) rotate(-2deg) translateX(-10px); opacity: 0.12; }
-            75% { transform: translateY(-50px) rotate(2deg) translateX(8px); opacity: 0.18; }
+            bottom: 35%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px; height: 120px;
+            background: radial-gradient(circle, #ffd93d 30%, #ff6b35 70%);
+            border-radius: 50%;
+            box-shadow: 0 0 60px 20px rgba(255, 107, 53, 0.4);
+            opacity: 0.9;
         }
 
-        .glass-morphism {
-            background: rgba(20, 25, 40, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.15);
+        /* Moving Clouds */
+        .cloud {
+            position: absolute;
+            background: rgba(255,255,255,0.7);
+            border-radius: 50px;
+            opacity: 0.8;
+        }
+        .cloud::before, .cloud::after {
+            content: '';
+            position: absolute;
+            background: rgba(255,255,255,0.7);
+            border-radius: 50%;
+        }
+        .cloud1 {
+            width: 100px; height: 40px;
+            top: 15%; left: -150px;
+            animation: floatCloud 25s linear infinite;
+        }
+        .cloud1::before { width: 50px; height: 50px; top: -25px; left: 15px; }
+        .cloud1::after { width: 60px; height: 40px; top: -15px; left: 45px; }
+
+        .cloud2 {
+            width: 80px; height: 35px;
+            top: 25%; left: -120px;
+            animation: floatCloud 35s linear infinite;
+            animation-delay: 5s;
+        }
+        .cloud2::before { width: 45px; height: 45px; top: -22px; left: 12px; }
+        .cloud2::after { width: 55px; height: 35px; top: -12px; left: 38px; }
+
+        .cloud3 {
+            width: 120px; height: 45px;
+            top: 10%; left: -180px;
+            animation: floatCloud 30s linear infinite;
+            animation-delay: 12s;
+        }
+        .cloud3::before { width: 60px; height: 60px; top: -30px; left: 20px; }
+        .cloud3::after { width: 70px; height: 45px; top: -18px; left: 55px; }
+
+        @keyframes floatCloud {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(100vw + 200px)); }
         }
 
-        /* Sidebar Drawer */
-        .sidebar-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(5px);
-            z-index: 900;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
+        /* Mountains */
+        .mountain-range {
+            position: absolute;
+            bottom: 0;
+            left: 0; right: 0;
+            height: 35%;
         }
-        .sidebar-overlay.active { opacity: 1; visibility: visible; }
-
-        .sidebar-drawer {
-            position: fixed;
-            top: 0; left: 0;
-            width: 300px;
-            height: 100%;
-            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-            border-right: 1px solid rgba(255,255,255,0.1);
-            z-index: 1000;
-            transform: translateX(-100%);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow-y: auto;
+        .mountain {
+            position: absolute;
+            bottom: 0;
+            width: 0; height: 0;
+            border-left: solid transparent;
+            border-right: solid transparent;
+            border-bottom: solid #2d3436;
         }
-        .sidebar-drawer.active { transform: translateX(0); }
-
-        .sidebar-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 24px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            color: white;
+        .mountain:nth-child(1) {
+            left: -10%; 
+            border-left-width: 200px; 
+            border-right-width: 200px; 
+            border-bottom-width: 180px;
+            opacity: 0.6;
         }
-        .sidebar-item:hover {
-            background: rgba(102, 126, 234, 0.15);
-            padding-left: 30px;
+        .mountain:nth-child(2) {
+            left: 15%; 
+            border-left-width: 250px; 
+            border-right-width: 250px; 
+            border-bottom-width: 250px;
+            opacity: 0.8;
         }
-        .sidebar-item.coming-soon { opacity: 0.6; cursor: not-allowed; }
-        .sidebar-item.coming-soon:hover { background: transparent; padding-left: 24px; }
-
-        .coming-soon-badge {
-            font-size: 0.7rem;
-            background: rgba(251, 191, 36, 0.2);
-            color: #fbbf24;
-            padding: 3px 10px;
-            border-radius: 20px;
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            font-weight: 600;
+        .mountain:nth-child(3) {
+            left: 45%; 
+            border-left-width: 300px; 
+            border-right-width: 300px; 
+            border-bottom-width: 200px;
+            opacity: 0.7;
+        }
+        .mountain:nth-child(4) {
+            left: 70%; 
+            border-left-width: 220px; 
+            border-right-width: 220px; 
+            border-bottom-width: 160px;
+            opacity: 0.5;
+        }
+        .mountain:nth-child(5) {
+            left: 85%; 
+            border-left-width: 180px; 
+            border-right-width: 180px; 
+            border-bottom-width: 140px;
+            opacity: 0.6;
         }
 
-        /* Navbar */
+        /* Trees Swaying in Wind */
+        .tree-container {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 120px;
+            z-index: 1;
+        }
+        .tree {
+            position: absolute;
+            bottom: 0;
+            transform-origin: bottom center;
+            animation: sway 3s ease-in-out infinite;
+        }
+        /* Tree trunk */
+        .tree::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 40px;
+            background: #3e2723;
+            border-radius: 2px;
+        }
+        /* Tree top (simple triangle) */
+        .tree::after {
+            content: '';
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0; height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 50px solid #1b5e20;
+        }
+        .tree:nth-child(1) { left: 5%; animation-delay: 0s; }
+        .tree:nth-child(2) { left: 12%; animation-delay: 0.5s; transform: scale(0.8); }
+        .tree:nth-child(3) { left: 20%; animation-delay: 1s; }
+        .tree:nth-child(4) { left: 75%; animation-delay: 0.3s; transform: scale(0.9); }
+        .tree:nth-child(5) { left: 82%; animation-delay: 0.8s; }
+        .tree:nth-child(6) { left: 90%; animation-delay: 1.2s; transform: scale(0.7); }
+        .tree:nth-child(7) { left: 30%; animation-delay: 1.5s; transform: scale(0.6); }
+        .tree:nth-child(8) { left: 60%; animation-delay: 0.2s; transform: scale(0.85); }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+
+        /* Birds */
+        .bird {
+            position: absolute;
+            opacity: 0.6;
+            animation: fly 20s linear infinite;
+        }
+        .bird svg { width: 24px; height: 24px; }
+        .bird1 { top: 20%; left: -50px; animation-delay: 0s; }
+        .bird2 { top: 30%; left: -50px; animation-delay: 8s; transform: scale(0.7); }
+        @keyframes fly {
+            0% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(25vw) translateY(-10px); }
+            50% { transform: translateX(50vw) translateY(5px); }
+            75% { transform: translateX(75vw) translateY(-5px); }
+            100% { transform: translateX(calc(100vw + 50px)) translateY(0); }
+        }
+
+        /* ===== UI COMPONENTS ===== */
         .navbar {
             position: fixed;
             top: 0; left: 0; right: 0;
-            z-index: 800;
-            padding: 15px 20px;
+            height: 60px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            background: rgba(10, 15, 26, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-
-        .hamburger {
-            width: 32px;
-            height: 32px;
+        .hamburger-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             gap: 5px;
-            cursor: pointer;
-            z-index: 1100;
-            transition: all 0.3s;
-            background: transparent;
-            border: none;
-            outline: none;
-            padding: 4px;
-        }
-        .hamburger:hover { transform: scale(1.1); }
-        .hamburger span {
-            display: block;
-            width: 24px;
-            height: 2px;
-            background: white;
-            border-radius: 2px;
-            transition: all 0.3s;
-        }
-
-        .logo-placeholder {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        /* Main Content */
-        .main-content {
+            z-index: 1001;
             position: relative;
-            z-index: 10;
-            padding-top: 100px;
-            min-height: 100vh;
+        }
+        .hamburger-btn span {
+            display: block;
+            width: 25px; height: 3px;
+            background: #333;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+        .logo-nav {
+            margin-left: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #c44569;
         }
 
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-align: center;
-            letter-spacing: -1px;
-        }
-        .hero-subtitle {
-            text-align: center;
-            color: #a0aec0;
-            font-size: 1.2rem;
-            margin-top: 10px;
-            font-weight: 300;
-        }
-
-        /* Pricing Button */
-        .pricing-trigger-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 16px 36px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
-        }
-        .pricing-trigger-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
-        }
-
-        .pricing-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 24px;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        .pricing-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(102, 126, 234, 0.5);
-            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);
-        }
-        .pricing-card.featured {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
-            border-color: rgba(251, 191, 36, 0.3);
-        }
-        .pricing-card.featured:hover {
-            border-color: rgba(251, 191, 36, 0.6);
-            box-shadow: 0 10px 40px rgba(251, 191, 36, 0.2);
-        }
-
-        /* WhatsApp Float */
-        .whatsapp-float {
+        .sidebar-overlay {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 100;
-            animation: float-wa 3s ease-in-out infinite;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+            display: none;
         }
-        @keyframes float-wa {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .sidebar-overlay.active { display: block; }
+        .sidebar {
+            position: fixed;
+            top: 0; left: -300px;
+            width: 280px; height: 100vh;
+            background: #fff;
+            z-index: 999;
+            transition: left 0.3s ease;
+            padding-top: 80px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
-        .whatsapp-float-btn {
-            width: 60px; height: 60px;
-            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
-            transition: all 0.3s;
+        .sidebar.active { left: 0; }
+        .sidebar-title {
+            padding: 0 20px 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #c44569;
+            border-bottom: 2px solid #eee;
+        }
+        .sidebar-item {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #333;
+            border-bottom: 1px solid #f0f0f0;
+            transition: 0.2s;
             cursor: pointer;
+        }
+        .sidebar-item:hover { background: #f8f9ff; color: #c44569; }
+        .sidebar-item.coming-soon {
+            color: #999;
+            cursor: default;
+        }
+        .sidebar-item.coming-soon:hover { background: #fff; color: #999; }
+        .coming-badge {
+            font-size: 11px;
+            background: #ffc107;
+            color: #333;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 10px;
+        }
+
+        .hero {
+            margin-top: 60px;
+            padding: 60px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+        }
+        .hero .subtitle {
+            font-size: 22px;
+            opacity: 0.95;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+        }
+        .btn-primary {
+            display: inline-block;
+            padding: 14px 35px;
+            background: #fff;
+            color: #c44569;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: 0.3s;
             text-decoration: none;
         }
-        .whatsapp-float-btn:hover { transform: scale(1.1); box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6); }
-        .whatsapp-tooltip {
-            position: absolute;
-            right: 70px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(20, 25, 40, 0.95);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-            border: 1px solid rgba(37, 211, 102, 0.3);
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
-        .whatsapp-float:hover .whatsapp-tooltip { opacity: 1; visibility: visible; right: 75px; }
 
-        /* Modals */
         .modal-overlay {
             position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(15px);
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
             z-index: 2000;
             display: none;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
+            padding: 20px;
         }
         .modal-overlay.active { display: flex; }
-        .modal-content {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border: 2px solid rgba(102, 126, 234, 0.3);
-            border-radius: 25px;
+        .modal-box {
+            background: #fff;
+            border-radius: 16px;
             max-width: 500px;
             width: 100%;
-            padding: 40px;
-            animation: modalEnter 0.4s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
             position: relative;
+            animation: modalPop 0.3s ease;
         }
-        @keyframes modalEnter {
-            from { opacity: 0; transform: scale(0.9) translateY(30px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+        @keyframes modalPop {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
-
-        .input-field {
-            width: 100%;
-            padding: 16px 22px;
-            font-size: 1em;
-            border: 2px solid rgba(255,255,255,0.2);
-            border-radius: 14px;
-            background: rgba(255,255,255,0.05);
-            color: white;
-            margin: 12px 0;
-            transition: all 0.3s;
-        }
-        .input-field:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
-        }
-        .input-field::placeholder { color: rgba(255,255,255,0.4); }
-
-        .btn-primary {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        .modal-close {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 28px;
+            color: #999;
+            cursor: pointer;
             border: none;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: 1em;
-            cursor: pointer;
-            transition: all 0.3s;
+            background: none;
+            width: 36px; height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin-top: 16px;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-        .btn-secondary {
-            width: 100%;
-            padding: 14px;
-            background: transparent;
-            color: #aaa;
-            border: 2px solid rgba(255,255,255,0.2);
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-        .btn-secondary:hover { background: rgba(255,255,255,0.1); color: white; }
-
-        .error-message {
-            color: #e74c3c;
-            font-size: 0.9em;
-            margin-top: 10px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .error-message.show { display: flex; }
-
-        .link-text {
-            color: #667eea;
-            text-decoration: underline;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: color 0.3s;
-        }
-        .link-text:hover { color: #a78bfa; }
-
-        .step-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 24px;
-        }
-        .step-dot {
-            width: 10px; height: 10px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            transition: all 0.3s;
         }
-        .step-dot.active { background: #667eea; transform: scale(1.2); }
-        .step-dot.completed { background: #4ECDC4; }
-
-        .user-info-display {
-            background: rgba(102, 126, 234, 0.15);
-            border: 1px solid rgba(102, 126, 234, 0.4);
-            border-radius: 12px;
-            padding: 14px;
-            margin: 16px 0;
-            text-align: center;
-        }
-        .user-info-display .label { color: #aaa; font-size: 0.85em; margin-bottom: 4px; }
-        .user-info-display .value { color: white; font-size: 1.1em; font-weight: 600; }
-
-        /* Dashboard & Admin */
-        .dashboard-container {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            z-index: 1500;
-            overflow-y: auto;
-            padding: 20px;
-        }
-        .dashboard-container.active { display: block; }
-        .dashboard-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            border-radius: 16px;
+        .modal-close:hover { background: #f0f0f0; color: #333; }
+        .modal-title {
+            font-size: 24px;
             margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
+            color: #333;
         }
-        .dashboard-title { font-size: 1.6em; font-weight: bold; color: white; display: flex; align-items: center; gap: 12px; }
-        .back-btn {
-            display: flex; align-items: center; gap: 8px;
-            padding: 10px 18px;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .back-btn:hover { background: rgba(255,255,255,0.3); }
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        .dashboard-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            padding: 24px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .dashboard-card h3 { font-size: 1.1em; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; color: #fff; }
-        .stat-box {
-            background: rgba(255,255,255,0.08);
-            padding: 18px;
-            border-radius: 14px;
-            text-align: center;
-            margin-bottom: 12px;
-        }
-        .stat-box-value { font-size: 2.2em; font-weight: bold; color: #4ECDC4; }
-        .stat-box-label { color: #aaa; font-size: 0.85em; margin-top: 4px; }
-        .leaderboard-list { display: flex; flex-direction: column; gap: 10px; }
-        .leaderboard-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 14px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 14px;
-        }
-        .leaderboard-rank {
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: bold; font-size: 1em;
-            flex-shrink: 0;
-        }
-        .rank-1 { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; }
-        .rank-2 { background: linear-gradient(135deg, #C0C0C0, #A0A0A0); color: #000; }
-        .rank-3 { background: linear-gradient(135deg, #CD7F32, #B87333); color: #fff; }
-        .rank-other { background: rgba(255,255,255,0.2); color: #fff; }
-        .history-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 14px;
-            background: rgba(255,255,255,0.05);
+        .price-card {
+            background: #f8f9ff;
+            border: 2px solid #e0e0e0;
             border-radius: 12px;
-            margin-bottom: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: 0.3s;
         }
-        .results-table {
+        .price-card:hover { border-color: #c44569; transform: translateY(-2px); }
+        .price-card h3 { color: #c44569; margin-bottom: 8px; }
+        .price-tag {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .price-btn {
+            display: block;
             width: 100%;
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            overflow: hidden;
-            margin-top: 20px;
-        }
-        .results-table table { width: 100%; border-collapse: collapse; }
-        .results-table th { background: rgba(102, 126, 234, 0.3); padding: 14px; text-align: left; color: #fff; }
-        .results-table td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ddd; }
-        .admin-panel {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: #1a1a2e;
-            z-index: 3000;
-            overflow-y: auto;
-            padding: 20px;
-        }
-        .admin-panel.active { display: block; }
-        .whitelist-admin-panel {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: #1a1a2e;
-            z-index: 5000;
-            overflow-y: auto;
-            padding: 20px;
-        }
-        .whitelist-admin-panel.active { display: block; }
-        .user-list-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 14px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 8px;
-        }
-        .code-badge {
-            font-family: monospace;
-            background: rgba(102, 126, 234, 0.2);
-            color: #667eea;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.85em;
-        }
-        .action-btns { display: flex; gap: 8px; }
-        .btn-icon {
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s;
-        }
-        .btn-copy { background: rgba(102, 126, 234, 0.2); color: #667eea; border: 1px solid #667eea; }
-        .btn-delete { background: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; }
-        .message-box {
             padding: 12px;
+            background: #25d366;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+        .price-btn:hover { background: #128c7e; }
+
+        .form-group { margin-bottom: 18px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #555;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
             border-radius: 10px;
-            margin-top: 10px;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #c44569;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #c44569;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-submit:hover { background: #a03555; }
+        .link-text {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #c44569;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .error-msg {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 8px;
             display: none;
         }
-        .message-box.success { display: block; background: rgba(78, 205, 196, 0.2); color: #4ECDC4; border: 1px solid #4ECDC4; }
-        .message-box.error { display: block; background: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; }
-        .tab-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 10px;
-        }
-        .tab-btn {
-            padding: 10px 20px;
-            background: transparent;
-            border: none;
-            color: #aaa;
-            cursor: pointer;
-            font-weight: 600;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-        .tab-btn.active { background: rgba(102, 126, 234, 0.3); color: white; }
-        .tab-btn:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
 
-        .secret-admin-trigger {
+        .wa-float {
             position: fixed;
-            bottom: 10px;
-            left: 10px;
-            width: 30px;
-            height: 30px;
-            opacity: 0;
-            cursor: pointer;
-            z-index: 999;
+            bottom: 25px;
+            right: 25px;
+            width: 60px; height: 60px;
+            background: #25d366;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 900;
+            transition: 0.3s;
+        }
+        .wa-float:hover {
+            transform: scale(1.1);
+            background: #128c7e;
         }
 
-        .success-icon { font-size: 3.5em; color: #4ECDC4; margin-bottom: 16px; text-align: center; }
+        .exam-section {
+            display: none;
+            padding: 80px 20px 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+        .exam-section.active { display: block; }
+        .exam-timer {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        .question-box {
+            background: white;
+            color: #333;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+        .option {
+            display: block;
+            padding: 12px;
+            margin: 8px 0;
+            background: #f8f9ff;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .option:hover { border-color: #c44569; }
+        .option.selected { background: #c44569; color: white; border-color: #c44569; }
 
-        @media (max-width: 768px) {
-            .hero-title { font-size: 2.5rem; }
-            .sidebar-drawer { width: 260px; }
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 32px; }
+            .hero .subtitle { font-size: 16px; }
+            .sun { width: 80px; height: 80px; }
         }
     </style>
 <base target="_blank">
 </head>
-<body class="text-white relative">
+<body>
 
-    <!-- SECRET ADMIN TRIGGER -->
-    <div class="secret-admin-trigger" id="adminTrigger" onclick="handleAdminClick()"></div>
+    <!-- Background Scene -->
+    <div class="bg-scene">
+        <div class="sun"></div>
 
-    <!-- Math Background -->
-    <div class="math-background" id="mathBackground">
-        <div class="math-formula large" style="top: 2%; left: 2%;">$$\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}$$</div>
-        <div class="math-formula" style="top: 5%; left: 25%;">$$e^{i\pi} + 1 = 0$$</div>
-        <div class="math-formula" style="top: 3%; left: 50%;">$$\nabla \times \mathbf{F} = \mathbf{0}$$</div>
-        <div class="math-formula" style="top: 6%; left: 70%;">$$\sin^2\theta + \cos^2\theta = 1$$</div>
-        <div class="math-formula large" style="top: 1%; left: 85%;">$$\nabla^2 \psi = 0$$</div>
-    </div>
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+        <div class="cloud cloud3"></div>
 
-    <!-- SIDEBAR OVERLAY -->
-    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-
-    <!-- SIDEBAR DRAWER -->
-    <div class="sidebar-drawer" id="sidebarDrawer">
-        <div style="padding: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px;">
-            <div class="logo-placeholder" style="width: 40px; height: 40px; font-size: 1rem;">W</div>
-            <div>
-                <div style="font-weight: 700;">TRY OUT</div>
-                <div style="font-size: 0.8rem; color: #a0aec0;">wrosify</div>
-            </div>
+        <div class="bird bird1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2d3436" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s4-4 10-4 10 4 10 4"/>
+            </svg>
         </div>
-        <div style="padding: 8px 0;">
-            <div class="sidebar-item" onclick="openAccessModal(1); closeSidebar();">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #06b6d4, #3b82f6); display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
-                    <span>Try Out 1</span>
-                </div>
-                <i class="fas fa-chevron-right" style="color: #667eea; font-size: 0.8rem;"></i>
-            </div>
-            <div class="sidebar-item" onclick="openAccessModal(2); closeSidebar();">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #8b5cf6, #a855f7); display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
-                    <span>Try Out 2</span>
-                </div>
-                <i class="fas fa-chevron-right" style="color: #667eea; font-size: 0.8rem;"></i>
-            </div>
-            <div class="sidebar-item coming-soon">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #ec4899, #f43f5e); display: flex; align-items: center; justify-content: center; font-weight: bold; opacity: 0.6;">3</div>
-                    <span style="opacity: 0.6;">Try Out 3</span>
-                </div>
-                <span class="coming-soon-badge">COMING SOON</span>
-            </div>
-            <div class="sidebar-item coming-soon">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #10b981, #14b8a6); display: flex; align-items: center; justify-content: center; font-weight: bold; opacity: 0.6;">4</div>
-                    <span style="opacity: 0.6;">Try Out 4</span>
-                </div>
-                <span class="coming-soon-badge">COMING SOON</span>
-            </div>
-            <div class="sidebar-item coming-soon">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #f59e0b, #f97316); display: flex; align-items: center; justify-content: center; font-weight: bold; opacity: 0.6;">5</div>
-                    <span style="opacity: 0.6;">Try Out 5</span>
-                </div>
-                <span class="coming-soon-badge">COMING SOON</span>
-            </div>
+        <div class="bird bird2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2d3436" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s4-4 10-4 10 4 10 4"/>
+            </svg>
         </div>
-        <div style="padding: 24px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto;">
-            <button onclick="openDashboard(); closeSidebar();" class="btn-secondary" style="margin: 0;">
-                <i class="fas fa-chart-line"></i> Dashboard Peserta
-            </button>
-            <button onclick="openLeaderboard(); closeSidebar();" class="btn-secondary" style="margin-top: 10px;">
-                <i class="fas fa-trophy"></i> Top 10 Leaderboard
-            </button>
+
+        <div class="mountain-range">
+            <div class="mountain"></div>
+            <div class="mountain"></div>
+            <div class="mountain"></div>
+            <div class="mountain"></div>
+            <div class="mountain"></div>
+        </div>
+
+        <div class="tree-container">
+            <div class="tree"></div>
+            <div class="tree"></div>
+            <div class="tree"></div>
+            <div class="tree"></div>
+            <div class="tree"></div>
+            <div class="tree"></div>
+            <div class="tree"></div>
+            <div class="tree"></div>
         </div>
     </div>
 
-    <!-- NAVBAR -->
+    <!-- Navbar -->
     <nav class="navbar">
-        <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()" type="button">
+        <button class="hamburger-btn" id="hamburgerBtn" type="button" aria-label="Menu">
             <span></span>
             <span></span>
             <span></span>
         </button>
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <div class="logo-placeholder" id="logoImg">W</div>
-            <div style="font-weight: 700; font-size: 1.1rem;">wrosify</div>
-        </div>
-        <div style="width: 32px;"></div>
+        <div class="logo-nav" id="logoNav">Wrosify</div>
     </nav>
 
-    <!-- WHATSAPP FLOAT -->
-    <div class="whatsapp-float">
-        <a href="https://wa.me/6287765692166" target="_blank" class="whatsapp-float-btn">
-            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-        </a>
-        <span class="whatsapp-tooltip">Chat Admin</span>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-title">Pilih Try Out</div>
+        <a class="sidebar-item" data-to="1">Try Out 1</a>
+        <a class="sidebar-item" data-to="2">Try Out 2</a>
+        <a class="sidebar-item coming-soon">Try Out 3 <span class="coming-badge">COMING SOON</span></a>
+        <a class="sidebar-item coming-soon">Try Out 4 <span class="coming-badge">COMING SOON</span></a>
+        <a class="sidebar-item coming-soon">Try Out 5 <span class="coming-badge">COMING SOON</span></a>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div class="main-content container mx-auto px-4 pb-12">
+    <!-- Hero -->
+    <section class="hero" id="heroSection">
+        <div style="width:80px;height:80px;background:white;border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:40px;color:#c44569;font-weight:bold;box-shadow:0 4px 15px rgba(0,0,0,0.2);" id="logoHero">W</div>
+        <h1>TRY OUT</h1>
+        <div class="subtitle">wrosify</div>
+        <button class="btn-primary" id="btnLihatHarga">Lihat Daftar Harga</button>
+    </section>
 
-        <!-- Hero Section -->
-        <div class="text-center mb-16 pt-8">
-            <div style="margin-bottom: 24px;">
-                <div class="logo-placeholder" style="width: 80px; height: 80px; font-size: 2rem; margin: 0 auto;">W</div>
+    <!-- Pricing Modal -->
+    <div class="modal-overlay" id="pricingModal">
+        <div class="modal-box">
+            <button class="modal-close" id="closePricing">&times;</button>
+            <div class="modal-title">Daftar Harga Try Out</div>
+            <div class="price-card">
+                <h3>Try Out 1</h3>
+                <div class="price-tag">Rp 10.000</div>
+                <p>Akses penuh soal + pembahasan</p>
+                <a class="price-btn" href="https://wa.me/6287765692166?text=Halo%2C%20saya%20ingin%20pesan%20Try%20Out%201%20Wrosify" target="_blank">Pesan via WhatsApp</a>
             </div>
-            <h1 class="hero-title">TRY OUT wrosify</h1>
-            <p class="hero-subtitle">Persiapkan dirimu untuk OSN dengan try out terbaik</p>
-
-            <div class="mt-8">
-                <button class="pricing-trigger-btn" onclick="openPricingModal()">
-                    <i class="fas fa-tag"></i> Lihat Daftar Harga
-                </button>
+            <div class="price-card">
+                <h3>Try Out 2</h3>
+                <div class="price-tag">Rp 10.000</div>
+                <p>Akses penuh soal + pembahasan</p>
+                <a class="price-btn" href="https://wa.me/6287765692166?text=Halo%2C%20saya%20ingin%20pesan%20Try%20Out%202%20Wrosify" target="_blank">Pesan via WhatsApp</a>
             </div>
-        </div>
-
-        <!-- Info Section -->
-        <div class="max-w-2xl mx-auto mb-12">
-            <div class="glass-morphism rounded-xl p-6 border border-white/10">
-                <h3 class="text-lg font-semibold mb-4 text-indigo-300 text-center">
-                    <i class="fas fa-info-circle"></i> Format Soal Sesuai Puspresnas
-                </h3>
-                <div class="flex justify-center gap-8 text-sm flex-wrap">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">10</div>
-                        <span class="text-gray-300">Pilihan Ganda<br><span class="text-xs text-gray-500">(1 poin)</span></span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">10</div>
-                        <span class="text-gray-300">Isian Singkat<br><span class="text-xs text-gray-500">(4 poin)</span></span>
-                    </div>
-                </div>
-                <p class="text-xs text-gray-400 mt-4 text-center italic">*Total skor maksimal: 50 poin</p>
+            <div class="price-card">
+                <h3>Try Out 3</h3>
+                <div class="price-tag">Rp 10.000</div>
+                <p>Akses penuh soal + pembahasan</p>
+                <span style="display:block;width:100%;padding:12px;background:#999;color:white;border-radius:8px;font-size:15px;font-weight:bold;text-align:center;">COMING SOON</span>
             </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="text-center text-gray-500 text-sm pb-8">
-            <p> TRY OUT wrosify - @wrosn26</p>
-            <p class="mt-1">Hubungi admin via WhatsApp untuk pemesanan</p>
-        </div>
-    </div>
-
-    <!-- PRICING MODAL -->
-    <div class="modal-overlay" id="pricingModal" onclick="closePricingOnOverlay(event)">
-        <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 600px;">
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold mb-2 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Daftar Harga</h2>
-                <p class="text-gray-400">Bayar per Try Out sesuai kebutuhanmu</p>
+            <div class="price-card">
+                <h3>Try Out 4</h3>
+                <div class="price-tag">Rp 10.000</div>
+                <p>Akses penuh soal + pembahasan</p>
+                <span style="display:block;width:100%;padding:12px;background:#999;color:white;border-radius:8px;font-size:15px;font-weight:bold;text-align:center;">COMING SOON</span>
             </div>
-
-            <div class="space-y-3 mb-6">
-                <div class="pricing-card" onclick="orderViaWA(1)">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-cyan-500/20 flex items-center justify-center text-cyan-400 font-bold">1x</div>
-                            <span>Satu Kali Try Out</span>
-                        </div>
-                        <span class="text-xl font-bold text-amber-400">Rp 10.000</span>
-                    </div>
-                </div>
-
-                <div class="pricing-card" onclick="orderViaWA(2)">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-violet-500/20 flex items-center justify-center text-violet-400 font-bold">2x</div>
-                            <span>Dua Kali Try Out</span>
-                        </div>
-                        <span class="text-xl font-bold text-amber-400">Rp 20.000</span>
-                    </div>
-                </div>
-
-                <div class="pricing-card" onclick="orderViaWA(3)">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 font-bold">3x</div>
-                            <span>Tiga Kali Try Out</span>
-                        </div>
-                        <span class="text-xl font-bold text-amber-400">Rp 30.000</span>
-                    </div>
-                </div>
-
-                <div class="pricing-card" onclick="orderViaWA(4)">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">4x</div>
-                            <span>Empat Kali Try Out</span>
-                        </div>
-                        <span class="text-xl font-bold text-amber-400">Rp 40.000</span>
-                    </div>
-                </div>
-
-                <div class="pricing-card featured" onclick="orderViaWA(5)">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-amber-500/30 flex items-center justify-center text-amber-400 font-bold">5x</div>
-                            <div>
-                                <span class="block">Lima Kali Try Out</span>
-                                <span class="text-xs text-amber-300">Paket Lengkap</span>
-                            </div>
-                        </div>
-                        <span class="text-xl font-bold text-amber-400">Rp 50.000</span>
-                    </div>
-                </div>
+            <div class="price-card">
+                <h3>Try Out 5</h3>
+                <div class="price-tag">Rp 10.000</div>
+                <p>Akses penuh soal + pembahasan</p>
+                <span style="display:block;width:100%;padding:12px;background:#999;color:white;border-radius:8px;font-size:15px;font-weight:bold;text-align:center;">COMING SOON</span>
             </div>
-
-            <button onclick="closePricingModal()" class="w-full py-3 rounded-lg border border-white/20 hover:bg-white/10 transition-colors">
-                Tutup
-            </button>
-        </div>
-    </div>
-
-    <!-- ACCESS MODAL (Registrasi + Password) -->
-    <div class="modal-overlay" id="accessModal">
-        <div class="modal-content">
-            <!-- Step Indicator -->
-            <div class="step-indicator">
-                <div class="step-dot active" id="dot1"></div>
-                <div class="step-dot" id="dot2"></div>
-                <div class="step-dot" id="dot3"></div>
-            </div>
-
-            <!-- STEP 1: AKUN REGISTRASI (Nama + Kode) -->
-            <div class="whitelist-step active" id="step1">
-                <div class="text-center mb-6">
-                    <div style="background: rgba(102, 126, 234, 0.2); border: 1px solid rgba(102, 126, 234, 0.4); color: #a78bfa; padding: 6px 16px; border-radius: 20px; font-weight: 600; display: inline-block; margin-bottom: 12px; font-size: 0.9rem;" id="modalTryOutLabel">
-                        Try Out 1
-                    </div>
-                    <h2 class="text-2xl font-bold mb-2">AKUN REGISTRASI</h2>
-                    <p class="text-gray-400 text-sm">Masukkan nama dan kode unik registrasi</p>
-                </div>
-
-                <div style="text-align: left; margin-bottom: 6px; color: #aaa; font-size: 0.85em; padding-left: 4px;">Nama</div>
-                <input type="text" class="input-field" id="inputName" placeholder="Contoh: Budi Santoso" autocomplete="off" style="margin-top: 0;">
-
-                <div style="text-align: left; margin-bottom: 6px; color: #aaa; font-size: 0.85em; padding-left: 4px; margin-top: 8px;">Kode</div>
-                <input type="text" class="input-field" id="inputCode" placeholder="Contoh: OSN2024_001" autocomplete="off" style="text-transform: uppercase; margin-top: 0;">
-
-                <div style="text-align: center; margin-top: 12px;">
-                    <span class="link-text" onclick="noAccountHandler()">
-                        <i class="fas fa-user-plus"></i> Belum Punya Akun? Klik ini!
-                    </span>
-                </div>
-
-                <div class="error-message" id="error1">
-                    <i class="fas fa-exclamation-circle"></i> <span>Akun tidak terdaftar!</span>
-                </div>
-
-                <button class="btn-primary" onclick="verifyRegistration()">
-                    <i class="fas fa-arrow-right"></i> Lanjutkan
-                </button>
-                <button class="btn-secondary" onclick="closeAccessModal()">Batal</button>
-            </div>
-
-            <!-- STEP 2: KODE TRY OUT (Password) -->
-            <div class="whitelist-step" id="step2">
-                <div class="text-center mb-6">
-                    <div style="background: rgba(102, 126, 234, 0.2); border: 1px solid rgba(102, 126, 234, 0.4); color: #a78bfa; padding: 6px 16px; border-radius: 20px; font-weight: 600; display: inline-block; margin-bottom: 12px; font-size: 0.9rem;" id="modalTryOutLabel2">
-                        Try Out 1
-                    </div>
-                    <h2 class="text-2xl font-bold mb-2">KODE TRY OUT</h2>
-                    <p class="text-gray-400 text-sm">Masukkan password dari grup WhatsApp</p>
-                </div>
-
-                <div class="user-info-display">
-                    <div class="label">Peserta</div>
-                    <div class="value" id="displayName">-</div>
-                </div>
-
-                <input type="password" class="input-field" id="inputPassword" placeholder="Masukkan password try out..." autocomplete="off">
-
-                <p class="text-xs text-center text-gray-500 mt-2">
-                    <i class="fas fa-info-circle"></i> Password didapat setelah pembayaran
-                </p>
-
-                <div class="error-message" id="error2">
-                    <i class="fas fa-exclamation-circle"></i> <span>Password salah!</span>
-                </div>
-
-                <button class="btn-primary" onclick="verifyPassword()">
-                    <i class="fas fa-unlock"></i> Masuk ke Try Out
-                </button>
-                <button class="btn-secondary" onclick="goToStep(1)">Kembali</button>
-            </div>
-
-            <!-- STEP 3: Success -->
-            <div class="whitelist-step" id="step3">
-                <div class="text-center">
-                    <div class="success-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold mb-2">Verifikasi Berhasil!</h2>
-                    <p class="text-gray-400 mb-6">Anda akan diarahkan ke halaman ujian...</p>
-                    <div class="user-info-display">
-                        <div class="label">Selamat mengerjakan</div>
-                        <div class="value" id="displayName2">-</div>
-                    </div>
-                    <button class="btn-primary" onclick="redirectToExam()">
-                        <i class="fas fa-play"></i> Mulai Try Out Sekarang
-                    </button>
-                </div>
+            <div class="price-card" style="border-color:#c44569;background:#fff0f3;">
+                <h3>Paket Bundle (TO 1 + TO 2)</h3>
+                <div class="price-tag">Rp 15.000</div>
+                <p>Hemat Rp 5.000</p>
+                <a class="price-btn" href="https://wa.me/6287765692166?text=Halo%2C%20saya%20ingin%20pesan%20Paket%20Bundle%20TO1%2BTO2%20Wrosify" target="_blank">Pesan via WhatsApp</a>
             </div>
         </div>
     </div>
 
-    <!-- DASHBOARD -->
-    <div class="dashboard-container" id="dashboardContainer">
-        <div class="dashboard-header">
-            <div class="dashboard-title">
-                <i class="fas fa-chart-line"></i> 
-                <span id="dashboardUserName">Dashboard Peserta</span>
-            </div>
-            <button onclick="closeDashboard()" class="back-btn">
-                <i class="fas fa-arrow-left"></i> Kembali
-            </button>
-        </div>
-        <div class="dashboard-grid">
-            <div class="dashboard-card">
-                <h3><i class="fas fa-user-graduate"></i> Statistik Saya</h3>
-                <div class="stat-box">
-                    <div class="stat-box-value" id="myTotalScore">0</div>
-                    <div class="stat-box-label">Total Poin Terbaik</div>
+    <!-- Registration Modal -->
+    <div class="modal-overlay" id="regModal">
+        <div class="modal-box">
+            <button class="modal-close" id="closeReg">&times;</button>
+            <div class="modal-title">AKUN REGISTRASI</div>
+            <form id="regForm">
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="regNama" placeholder="Masukkan nama lengkap" required>
                 </div>
-                <div class="stat-box">
-                    <div class="stat-box-value" id="myRank">-</div>
-                    <div class="stat-box-label">Peringkat</div>
+                <div class="form-group">
+                    <label>Kode</label>
+                    <input type="text" id="regKode" placeholder="Masukkan kode" required>
                 </div>
-            </div>
-            <div class="dashboard-card">
-                <h3><i class="fas fa-history"></i> Riwayat Try Out</h3>
-                <div id="historyList">
-                    <p style="color: #888; text-align: center; padding: 20px;">Belum ada riwayat</p>
-                </div>
-            </div>
+                <div class="error-msg" id="regError">Nama atau kode tidak terdaftar!</div>
+                <button type="submit" class="btn-submit">Masuk</button>
+                <span class="link-text" id="linkBelumPunya">Belum Punya Akun? Klik ini!</span>
+            </form>
         </div>
     </div>
 
-    <!-- LEADERBOARD -->
-    <div class="dashboard-container" id="leaderboardContainer">
-        <div class="dashboard-header">
-            <div class="dashboard-title">
-                <i class="fas fa-trophy" style="color: #FFD700;"></i> Top 10 Leaderboard
-            </div>
-            <button onclick="closeLeaderboard()" class="back-btn">
-                <i class="fas fa-arrow-left"></i> Kembali
-            </button>
-        </div>
-        <div class="dashboard-grid" style="max-width: 800px; margin: 0 auto;">
-            <div class="dashboard-card" style="grid-column: 1 / -1;">
-                <h3><i class="fas fa-medal"></i> Peringkat Terbaik</h3>
-                <div class="leaderboard-list" id="top10List"></div>
-            </div>
+    <!-- Code Modal -->
+    <div class="modal-overlay" id="codeModal">
+        <div class="modal-box">
+            <button class="modal-close" id="closeCode">&times;</button>
+            <div class="modal-title">KODE TRY OUT</div>
+            <form id="codeForm">
+                <div class="form-group">
+                    <label>Masukkan Kode Try Out</label>
+                    <input type="text" id="codeInput" placeholder="Contoh: 875611092" required>
+                </div>
+                <div class="error-msg" id="codeError">Kode salah!</div>
+                <button type="submit" class="btn-submit">Mulai Try Out</button>
+            </form>
         </div>
     </div>
 
-    <!-- ADMIN PANEL (Hasil Ujian) -->
-    <div class="admin-panel" id="adminPanel">
-        <div class="dashboard-header">
-            <div class="dashboard-title" id="adminPanelTitle">
-                <i class="fas fa-lock"></i> Secret Admin Panel
-            </div>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <button onclick="switchTryOut(1)" class="back-btn" id="btnTO1" style="background: #667eea;">
-                    <i class="fas fa-list"></i> TO 1
-                </button>
-                <button onclick="switchTryOut(2)" class="back-btn" id="btnTO2">
-                    <i class="fas fa-list"></i> TO 2
-                </button>
-                <button onclick="resetLeaderboard()" class="back-btn" style="background: #e74c3c;">
-                    <i class="fas fa-trash"></i> Reset Data
-                </button>
-                <button onclick="exportToCSV()" class="back-btn" style="background: #4ECDC4;">
-                    <i class="fas fa-download"></i> Export CSV
-                </button>
-                <button onclick="closeAdminPanel()" class="back-btn">
-                    <i class="fas fa-times"></i> Tutup
-                </button>
-            </div>
-        </div>
-        <div class="results-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama</th>
-                        <th>Waktu</th>
-                        <th>Skor</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="resultsTableBody"></tbody>
-            </table>
-        </div>
-    </div>
+    <!-- Exam Section -->
+    <section class="exam-section" id="examSection">
+        <div class="exam-timer">Sisa Waktu: <span id="timer">60:00</span></div>
+        <div id="questionContainer"></div>
+    </section>
 
-    <!-- WHITELIST ADMIN PANEL -->
-    <div class="whitelist-admin-panel" id="whitelistAdminPanel">
-        <div style="max-width: 900px; margin: 0 auto;">
-            <div class="dashboard-header">
-                <div class="dashboard-title">
-                    <i class="fas fa-users-cog"></i> Kelola Peserta Whitelist
-                </div>
-                <button onclick="closeWhitelistAdmin()" class="back-btn">
-                    <i class="fas fa-times"></i> Tutup
-                </button>
-            </div>
-            <div class="tab-container">
-                <button class="tab-btn active" id="tabTO1" onclick="switchAdminTab(1)">
-                    <i class="fas fa-hexagon"></i> Try Out 1
-                </button>
-                <button class="tab-btn" id="tabTO2" onclick="switchAdminTab(2)">
-                    <i class="fas fa-diamond"></i> Try Out 2
-                </button>
-            </div>
-            <div class="dashboard-card" style="margin-bottom: 20px;">
-                <h3 id="addUserTitle"><i class="fas fa-user-plus"></i> Tambah Peserta TO 1</h3>
-                <div style="display: grid; gap: 15px;">
-                    <div>
-                        <label style="color: #aaa; display: block; margin-bottom: 5px;">Nama Lengkap</label>
-                        <input type="text" id="newUserName" class="input-field" style="margin: 0;" placeholder="Masukkan nama lengkap...">
-                    </div>
-                    <div>
-                        <label style="color: #aaa; display: block; margin-bottom: 5px;">Kode Unik</label>
-                        <div style="display: flex; gap: 10px;">
-                            <input type="text" id="newUserCode" class="input-field" style="margin: 0; flex: 1; text-transform: uppercase;" placeholder="OSN2024_XXX">
-                            <button onclick="generateCode()" class="btn-primary" style="width: auto; padding: 15px 20px; margin: 0;">
-                                <i class="fas fa-random"></i> Generate
-                            </button>
-                        </div>
-                    </div>
-                    <button onclick="addNewUser()" class="btn-primary">
-                        <i class="fas fa-plus"></i> Tambah Peserta
-                    </button>
-                    <div id="addUserMessage" class="message-box"></div>
-                </div>
-            </div>
-            <div class="dashboard-card" style="margin-bottom: 20px;">
-                <h3 id="backupTitle"><i class="fas fa-file-export"></i> Backup & Restore TO 1</h3>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button onclick="exportWhitelist()" class="btn-primary" style="flex: 1; min-width: 200px;">
-                        <i class="fas fa-download"></i> Export ke JSON
-                    </button>
-                    <label class="btn-primary" style="flex: 1; min-width: 200px; cursor: pointer; text-align: center;">
-                        <i class="fas fa-upload"></i> Import dari JSON
-                        <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importWhitelist(this)">
-                    </label>
-                </div>
-            </div>
-            <div class="dashboard-card">
-                <h3 id="listTitle"><i class="fas fa-list"></i> Daftar Peserta TO 1 (<span id="totalUsers">0</span>)</h3>
-                <div style="margin-bottom: 15px;">
-                    <input type="text" id="searchUser" class="input-field" style="margin: 0;" placeholder="Cari peserta..." oninput="renderUsersList()">
-                </div>
-                <div id="usersList"></div>
-            </div>
-        </div>
-    </div>
+    <!-- WhatsApp Float -->
+    <a class="wa-float" href="https://wa.me/6287765692166" target="_blank" title="Chat WhatsApp">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.13 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
 
     <script>
-        // ============================================
-        // KONFIGURASI - EDIT DI SINI
-        // ============================================
-
-        // DATABASE PESERTA TO 1
-        const WHITELISTED_USERS_TO1 = [
-            { code: '12109856', name: 'AFIDA (1A)' },
-            { code: '09156728', name: 'NAJWA (2B)' },
-            { code: '56189914', name: 'NADINE (3C)' },
-            { code: '00592178', name: 'ERIN (4D)' },
-            { code: '81792443', name: 'FIRA (5E)' },
-            { code: '19847652', name: 'BAGAS (6F)' },
-            { code: '76518423', name: 'NAILAH (7G)' },
-            { code: '11098762', name: 'SALSA (8H)' },
-            { code: '56718293', name: 'MAYA (9I)' },
-            { code: '87652113', name: 'REZA (10J)' },
-            { code: '35672119', name: 'SYIFA (11K)' },
-            { code: '81907568', name: 'PRIYO (12L)' },
-            { code: '01987551', name: 'JESSYCA (13M)' },
-            { code: '55671880', name: 'BASIT (14N)' },
-            { code: '11678591', name: 'DHANA (15O)' },
-            { code: '31455590', name: 'NAYLA (16P)' },
-            { code: '01925541', name: 'KAVIRA (17R)' },
-        ];
-
-        // DATABASE PESERTA TO 2
-        const WHITELISTED_USERS_TO2 = [
-            { code: '9187542', name: 'DANI (1AA)' },
-            { code: '5541322', name: 'MAULA (2BB)' },
-            { code: '1109784', name: 'ERIN (3CC)' },
-            { code: '8871099', name: 'FELYSA (4DD)' },
-            { code: '6159224', name: 'FIRA (5EE)' },
-            { code: '5019371', name: 'HENDRA (6FF)' },
-            { code: '0019758', name: 'JESSICA (7GG)' },
-            { code: '3319002', name: 'KALISA (8HH)' },
-            { code: '2766511', name: 'KAVIRAH (9II)' },
-            { code: '5500123', name: 'KYLA (10JJ)' },
-            { code: '0123994', name: 'MAYA (11KK)' },
-            { code: '4190078', name: 'NADINE (12LL)' },
-            { code: '9178002', name: 'NAY (13MM)' },
-            { code: '5170966', name: 'NISA (14NN)' },
-            { code: '6679100', name: 'REZA (15OO)' },
-            { code: '1100978', name: 'RIRIS (16PP)' },
-            { code: '2019845', name: 'SALSA (17QQ)' },
-            { code: '8179092', name: 'NAYLA (18RR)' },
-        ];
-
-        // PASSWORD TRY OUT
-        const TRYOUT_PASSWORD = '875611092';
-        const TRYOUT_2_PASSWORD = '917055432';
-
-        // URL WEBSITE TRY OUT
-        const TRYOUT_URL = 'https://farras-tbz.github.io/SOAL-TRY-OUT-1/';
-        const TRYOUT_2_URL = 'https://farras-tbz.github.io/SOAL-TRY-OUT-2/';
-
-        // PASSWORD ADMIN
-        const ADMIN_PASSWORD = 'wrosn26admin123';
-        const WHITELIST_ADMIN_PASSWORD = 'whitelistadminwrosn26123';
-
-        // WHATSAPP NUMBER
-        const WHATSAPP_NUMBER = '6287765692166';
-
-        // ============================================
-        // STATE VARIABLES
-        // ============================================
-        let currentStep = 1;
-        let verifiedUser = null;
-        let currentTryOut = 1;
-        let currentAdminView = 1;
-        let currentAdminTab = 1;
-
-        // ============================================
-        // SIDEBAR FUNCTIONS
-        // ============================================
-        function toggleSidebar() {
-            document.getElementById('sidebarDrawer').classList.toggle('active');
-            document.getElementById('sidebarOverlay').classList.toggle('active');
-        }
-        function closeSidebar() {
-            document.getElementById('sidebarDrawer').classList.remove('active');
-            document.getElementById('sidebarOverlay').classList.remove('active');
-        }
-
-        // ============================================
-        // WHITELIST STORAGE
-        // ============================================
-        function getWhitelist(toNum) {
-            const storageKey = toNum === 2 ? 'tryout_whitelist_to2' : 'tryout_whitelist_to1';
-            const defaultList = toNum === 2 ? WHITELISTED_USERS_TO2 : WHITELISTED_USERS_TO1;
-            const saved = localStorage.getItem(storageKey);
-            if (saved) return JSON.parse(saved);
-            return [...defaultList];
-        }
-        function saveWhitelist(toNum, list) {
-            const storageKey = toNum === 2 ? 'tryout_whitelist_to2' : 'tryout_whitelist_to1';
-            localStorage.setItem(storageKey, JSON.stringify(list));
-        }
-
-        // ============================================
-        // PRICING MODAL
-        // ============================================
-        function openPricingModal() {
-            document.getElementById('pricingModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        function closePricingModal() {
-            document.getElementById('pricingModal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        function closePricingOnOverlay(e) {
-            if (e.target.id === 'pricingModal') closePricingModal();
-        }
-
-        // ============================================
-        // ACCESS MODAL (Registrasi + Password)
-        // ============================================
-        function openAccessModal(tryOutNum) {
-            currentTryOut = tryOutNum;
-            document.getElementById('modalTryOutLabel').textContent = 'Try Out ' + tryOutNum;
-            document.getElementById('modalTryOutLabel2').textContent = 'Try Out ' + tryOutNum;
-            document.getElementById('accessModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            goToStep(1);
-            setTimeout(() => document.getElementById('inputName').focus(), 100);
-        }
-        function closeAccessModal() {
-            document.getElementById('accessModal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-            verifiedUser = null;
-            currentStep = 1;
-            document.getElementById('inputName').value = '';
-            document.getElementById('inputCode').value = '';
-            document.getElementById('inputPassword').value = '';
-            document.querySelectorAll('.error-message').forEach(e => e.classList.remove('show'));
-        }
-        function goToStep(step) {
-            document.querySelectorAll('.whitelist-step').forEach(s => s.classList.remove('active'));
-            document.getElementById('step' + step).classList.add('active');
-            document.querySelectorAll('.step-dot').forEach((d, i) => {
-                d.classList.remove('active', 'completed');
-                if (i + 1 < step) d.classList.add('completed');
-                if (i + 1 === step) d.classList.add('active');
-            });
-            currentStep = step;
-            setTimeout(() => {
-                const input = document.querySelector('#step' + step + ' input');
-                if (input) input.focus();
-            }, 100);
-        }
-
-        // ============================================
-        // VERIFICATION FUNCTIONS
-        // ============================================
-        function verifyRegistration() {
-            const name = document.getElementById('inputName').value.trim().toLowerCase();
-            const code = document.getElementById('inputCode').value.trim().toUpperCase();
-            const errorEl = document.getElementById('error1');
-
-            if (!name) {
-                showError(errorEl, 'Masukkan nama!');
-                return;
-            }
-            if (!code) {
-                showError(errorEl, 'Masukkan kode!');
-                return;
-            }
-
-            const whitelist = getWhitelist(currentTryOut);
-            const user = whitelist.find(u => u.name.toLowerCase() === name && u.code === code);
-
-            if (!user) {
-                showError(errorEl, 'Nama atau kode tidak cocok! Silakan hubungi admin.');
-                shakeModal();
-                return;
-            }
-
-            verifiedUser = user;
-            document.getElementById('displayName').textContent = user.name;
-            document.getElementById('displayName2').textContent = user.name;
-
-            errorEl.classList.remove('show');
-            goToStep(2);
-        }
-        function verifyPassword() {
-            const password = document.getElementById('inputPassword').value.trim();
-            const errorEl = document.getElementById('error2');
-
-            if (!password) {
-                showError(errorEl, 'Masukkan password!');
-                return;
-            }
-
-            const correctPassword = currentTryOut === 2 ? TRYOUT_2_PASSWORD : TRYOUT_PASSWORD;
-
-            if (password !== correctPassword) {
-                showError(errorEl, 'Password salah!');
-                return;
-            }
-
-            errorEl.classList.remove('show');
-            goToStep(3);
-        }
-        function showError(el, msg) {
-            el.querySelector('span').textContent = msg;
-            el.classList.add('show');
-        }
-        function shakeModal() {
-            const box = document.querySelector('.modal-content');
-            box.style.animation = 'none';
-            setTimeout(() => box.style.animation = 'modalEnter 0.4s ease-out', 10);
-        }
-        function redirectToExam() {
-            const token = btoa(JSON.stringify({
-                n: verifiedUser.name,
-                c: verifiedUser.code,
-                t: Date.now(),
-                r: Math.random().toString(36).substring(7),
-                to: currentTryOut
-            }));
-            const targetUrl = currentTryOut === 2 ? TRYOUT_2_URL : TRYOUT_URL;
-            window.location.href = targetUrl + '?token=' + token;
-        }
-        function noAccountHandler() {
-            closeAccessModal();
-            openPricingModal();
-            setTimeout(() => {
-                alert('Silakan pilih paket harga dan hubungi admin via WhatsApp untuk membuat akun registrasi.');
-            }, 300);
-        }
-
-        // ============================================
-        // ORDER FUNCTIONS
-        // ============================================
-        function orderViaWA(num) {
-            const prices = {1: '10.000', 2: '20.000', 3: '30.000', 4: '40.000', 5: '50.000'};
-            const text = 'Halo admin wrosify! Saya ingin memesan ' + num + 'x Try Out (Rp ' + prices[num] + '). Mohon bantuannya untuk proses pendaftaran.';
-            window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text), '_blank');
-        }
-
-        // ============================================
-        // DASHBOARD & LEADERBOARD
-        // ============================================
-        function openDashboard() {
-            document.getElementById('dashboardContainer').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            renderDashboard();
-        }
-        function closeDashboard() {
-            document.getElementById('dashboardContainer').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        function openLeaderboard() {
-            document.getElementById('leaderboardContainer').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            renderLeaderboard();
-        }
-        function closeLeaderboard() {
-            document.getElementById('leaderboardContainer').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        function renderDashboard() {
-            const to1Results = JSON.parse(localStorage.getItem('tryout_results') || '[]');
-            const to2Results = JSON.parse(localStorage.getItem('tryout_2_results') || '[]');
-            const allUserResults = [...to1Results, ...to2Results];
-            const currentUser = sessionStorage.getItem('currentUser') || '';
-            const userResults = allUserResults.filter(r => r.name === currentUser);
-
-            const bestResult = userResults.length > 0 
-                ? userResults.reduce((max, r) => r.score > max.score ? r : max, userResults[0])
-                : null;
-
-            document.getElementById('myTotalScore').textContent = bestResult ? bestResult.score : '0';
-
-            const sortedResults = [...allUserResults].sort((a, b) => b.score - a.score);
-            const userRank = bestResult ? sortedResults.findIndex(r => r.name === bestResult.name && r.score === bestResult.score) + 1 : '-';
-            document.getElementById('myRank').textContent = userRank !== '-' ? '#' + userRank : '-';
-
-            const historyList = document.getElementById('historyList');
-            if (userResults.length === 0) {
-                historyList.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Belum ada riwayat</p>';
-            } else {
-                historyList.innerHTML = userResults.map(r => `
-                    <div class="history-item">
-                        <div>
-                            <div style="font-weight: 600;">${r.name}</div>
-                            <div style="font-size: 0.8em; color: #888;">${r.time}</div>
-                            <div style="font-size: 0.75em; color: #4ECDC4;">TO${r.tryOut || 1}</div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 1.3em; font-weight: bold; color: #4ECDC4;">${r.score}/50</div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-        }
-        function renderLeaderboard() {
-            const container = document.getElementById('top10List');
-            const to1Results = JSON.parse(localStorage.getItem('tryout_results') || '[]');
-            const to2Results = JSON.parse(localStorage.getItem('tryout_2_results') || '[]');
-
-            const combined = {};
-            [...to1Results, ...to2Results].forEach(r => {
-                if (!combined[r.name] || combined[r.name].score < r.score) {
-                    combined[r.name] = r;
-                }
-            });
-
-            let data = Object.values(combined);
-
-            if (data.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: #888;">
-                        <i class="fas fa-inbox" style="font-size: 3em; margin-bottom: 15px; display: block;"></i>
-                        Belum ada data hasil ujian.<br>
-                        <small>Data akan muncul setelah peserta menyelesaikan try out.</small>
-                    </div>
-                `;
-                return;
-            }
-
-            data.sort((a, b) => b.score - a.score);
-            const top10 = data.slice(0, 10);
-
-            container.innerHTML = top10.map((p, i) => {
-                const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
-                const medal = i === 0 ? '👑' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
-                return `
-                    <div class="leaderboard-item">
-                        <div class="leaderboard-rank ${rankClass}">${medal}</div>
-                        <div style="flex: 1;">
-                            <div style="font-weight: 600;">${p.name}</div>
-                            <div style="font-size: 0.8em; color: #888;">${p.time || '-'}</div>
-                        </div>
-                        <div style="background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 20px; font-weight: bold; color: ${i < 3 ? '#FFD700' : '#fff'};">
-                            ${p.score}/50
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ============================================
-        // WHITELIST ADMIN FUNCTIONS
-        // ============================================
-        function openWhitelistAdmin() {
-            const pass = prompt('Masukkan password admin whitelist:');
-            if (pass !== WHITELIST_ADMIN_PASSWORD) {
-                alert('Password salah!');
-                return;
-            }
-            document.getElementById('whitelistAdminPanel').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            switchAdminTab(1);
-        }
-        function closeWhitelistAdmin() {
-            document.getElementById('whitelistAdminPanel').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        function switchAdminTab(toNum) {
-            currentAdminTab = toNum;
-            document.getElementById('tabTO1').classList.toggle('active', toNum === 1);
-            document.getElementById('tabTO2').classList.toggle('active', toNum === 2);
-            document.getElementById('addUserTitle').innerHTML = `<i class="fas fa-user-plus"></i> Tambah Peserta TO ${toNum}`;
-            document.getElementById('backupTitle').innerHTML = `<i class="fas fa-file-export"></i> Backup & Restore TO ${toNum}`;
-            document.getElementById('listTitle').innerHTML = `<i class="fas fa-list"></i> Daftar Peserta TO ${toNum} (<span id="totalUsers">0</span>)`;
-            document.getElementById('newUserName').value = '';
-            document.getElementById('newUserCode').value = '';
-            renderUsersList();
-        }
-        function generateCode() {
-            const prefix = currentAdminTab === 2 ? 'TO2A' : 'TO1A';
-            const randomNum = String(Math.floor(1 + Math.random() * 999)).padStart(3, '0');
-            const whitelist = getWhitelist(currentAdminTab);
-            const existingCodes = whitelist.map(u => u.code);
-            let newCode = prefix + randomNum;
-            let counter = 1;
-            while (existingCodes.includes(newCode)) {
-                const newNum = String(parseInt(randomNum) + counter).padStart(3, '0');
-                newCode = prefix + newNum;
-                counter++;
-            }
-            document.getElementById('newUserCode').value = newCode;
-        }
-        function addNewUser() {
-            const name = document.getElementById('newUserName').value.trim();
-            const code = document.getElementById('newUserCode').value.trim().toUpperCase();
-            const msgEl = document.getElementById('addUserMessage');
-            const whitelist = getWhitelist(currentAdminTab);
-
-            if (!name) { showMessage(msgEl, 'Masukkan nama!', 'error'); return; }
-            if (!code) { showMessage(msgEl, 'Masukkan atau generate kode!', 'error'); return; }
-            if (whitelist.some(u => u.code === code)) { showMessage(msgEl, 'Kode sudah digunakan!', 'error'); return; }
-            if (whitelist.some(u => u.name.toLowerCase() === name.toLowerCase())) { showMessage(msgEl, 'Nama sudah terdaftar!', 'error'); return; }
-
-            whitelist.push({ code: code, name: name });
-            saveWhitelist(currentAdminTab, whitelist);
-            document.getElementById('newUserName').value = '';
-            document.getElementById('newUserCode').value = '';
-            showMessage(msgEl, `✅ ${name} berhasil ditambahkan ke TO ${currentAdminTab} dengan kode ${code}`, 'success');
-            renderUsersList();
-        }
-        function showMessage(el, text, type) {
-            el.textContent = text;
-            el.className = 'message-box ' + type;
-            setTimeout(() => el.className = 'message-box', 3000);
-        }
-        function renderUsersList() {
-            const container = document.getElementById('usersList');
-            const search = document.getElementById('searchUser')?.value.toLowerCase() || '';
-            const whitelist = getWhitelist(currentAdminTab);
-            const filtered = whitelist.filter(u => u.name.toLowerCase().includes(search) || u.code.toLowerCase().includes(search));
-            document.getElementById('totalUsers').textContent = whitelist.length;
-
-            if (filtered.length === 0) {
-                container.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Tidak ada peserta</p>';
-                return;
-            }
-
-            container.innerHTML = filtered.map((u, index) => {
-                const actualIndex = whitelist.indexOf(u);
-                return `
-                    <div class="user-list-item">
-                        <div>
-                            <div style="font-weight: 600; color: white;">${u.name}</div>
-                            <div class="code-badge"><i class="fas fa-key"></i> ${u.code}</div>
-                        </div>
-                        <div class="action-btns">
-                            <button class="btn-icon btn-copy" onclick="copyToClipboard('${u.code}')" title="Copy kode"><i class="fas fa-copy"></i></button>
-                            <button class="btn-icon btn-delete" onclick="deleteUser(${actualIndex})" title="Hapus"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => alert('Kode berhasil dicopy: ' + text));
-        }
-        function deleteUser(index) {
-            const whitelist = getWhitelist(currentAdminTab);
-            if (!confirm(`Yakin hapus ${whitelist[index].name} dari TO ${currentAdminTab}?`)) return;
-            whitelist.splice(index, 1);
-            saveWhitelist(currentAdminTab, whitelist);
-            renderUsersList();
-        }
-        function exportWhitelist() {
-            const whitelist = getWhitelist(currentAdminTab);
-            const dataStr = JSON.stringify(whitelist, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `whitelist_to${currentAdminTab}_${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-        function importWhitelist(input) {
-            const file = input.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = e => {
-                try {
-                    const imported = JSON.parse(e.target.result);
-                    if (Array.isArray(imported)) {
-                        const whitelist = getWhitelist(currentAdminTab);
-                        let added = 0;
-                        imported.forEach(u => {
-                            if (u.code && u.name && !whitelist.some(existing => existing.code === u.code)) {
-                                whitelist.push(u);
-                                added++;
-                            }
-                        });
-                        saveWhitelist(currentAdminTab, whitelist);
-                        renderUsersList();
-                        alert(`Berhasil import ${added} peserta ke TO ${currentAdminTab}!`);
-                    }
-                } catch (err) { alert('File tidak valid!'); }
-            };
-            reader.readAsText(file);
-            input.value = '';
-        }
-
-        // ============================================
-        // ADMIN PANEL FUNCTIONS
-        // ============================================
-        let adminClickCount = 0;
-        let adminClickTimer = null;
-
-        function handleAdminClick() {
-            adminClickCount++;
-            if (adminClickTimer) clearTimeout(adminClickTimer);
-            adminClickTimer = setTimeout(() => adminClickCount = 0, 3000);
-            if (adminClickCount >= 5) {
-                adminClickCount = 0;
-                const pass = prompt('Password Admin Panel:');
-                if (pass === ADMIN_PASSWORD) {
-                    document.getElementById('adminPanel').classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                    renderAdminPanel();
-                }
-            }
-        }
-        function closeAdminPanel() {
-            document.getElementById('adminPanel').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        function switchTryOut(toNum) {
-            currentAdminView = toNum;
-            document.getElementById('btnTO1').style.background = toNum === 1 ? '#667eea' : 'rgba(255,255,255,0.2)';
-            document.getElementById('btnTO2').style.background = toNum === 2 ? '#667eea' : 'rgba(255,255,255,0.2)';
-            renderAdminPanel();
-        }
-        function renderAdminPanel() {
-            const storageKey = currentAdminView === 2 ? 'tryout_2_results' : 'tryout_results';
-            const results = JSON.parse(localStorage.getItem(storageKey) || '[]');
-            const tbody = document.getElementById('resultsTableBody');
-            document.getElementById('adminPanelTitle').innerHTML = `<i class="fas fa-lock"></i> Hasil TO ${currentAdminView}`;
-
-            if (results.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 30px;">Belum ada data TO ${currentAdminView}</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = results.map((r, i) => `
-                <tr>
-                    <td>${i + 1}</td>
-                    <td>${r.name}</td>
-                    <td>${r.time}</td>
-                    <td>${r.score}/50</td>
-                    <td>${r.status || 'Complete'}</td>
-                </tr>
-            `).join('');
-        }
-        function exportToCSV() {
-            const storageKey = currentAdminView === 2 ? 'tryout_2_results' : 'tryout_results';
-            const results = JSON.parse(localStorage.getItem(storageKey) || '[]');
-            if (results.length === 0) { alert(`Tidak ada data TO ${currentAdminView} untuk diexport!`); return; }
-            let csv = 'No,Nama,Waktu Submit,Skor,Status
-';
-            results.forEach((r, index) => {
-                csv += (index + 1) + ',"' + r.name + '","' + r.time + '",' + r.score + ',' + (r.status || 'Complete') + '
-';
-            });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `hasil_tryout_${currentAdminView}_${new Date().toISOString().split('T')[0]}.csv`;
-            link.click();
-        }
-        window.resetLeaderboard = function() {
-            const storageKey = currentAdminView === 2 ? 'tryout_2_results' : 'tryout_results';
-            if (confirm(`⚠️ Yakin ingin menghapus SEMUA data TO ${currentAdminView}?
-
-Tindakan ini tidak bisa dibatalkan!`)) {
-                localStorage.removeItem(storageKey);
-                alert(`✅ Data TO ${currentAdminView} berhasil direset!`);
-                renderAdminPanel();
-                renderLeaderboard();
-            }
+        const whitelist = {
+            1: [
+                {nama: "Ahmad Fauzi", kode: "AF2024TO1"},
+                {nama: "Budi Santoso", kode: "BS2024TO1"},
+                {nama: "Citra Lestari", kode: "CL2024TO1"},
+                {nama: "Dewi Anggraini", kode: "DA2024TO1"},
+                {nama: "Eko Prasetyo", kode: "EP2024TO1"}
+            ],
+            2: [
+                {nama: "Ahmad Fauzi", kode: "AF2024TO2"},
+                {nama: "Budi Santoso", kode: "BS2024TO2"},
+                {nama: "Citra Lestari", kode: "CL2024TO2"},
+                {nama: "Dewi Anggraini", kode: "DA2024TO2"},
+                {nama: "Eko Prasetyo", kode: "EP2024TO2"}
+            ]
         };
+        const kodeTO = { 1: "875611092", 2: "917055432" };
+        let currentTO = 0;
+        let timerInterval;
 
-        // ============================================
-        // EVENT LISTENERS
-        // ============================================
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('inputName')?.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') verifyRegistration();
-            });
-            document.getElementById('inputCode')?.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') verifyRegistration();
-            });
-            document.getElementById('inputPassword')?.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') verifyPassword();
-            });
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    closeAccessModal();
-                    closeSidebar();
-                    closePricingModal();
-                    closeWhitelistAdmin();
-                }
-            });
-            document.addEventListener('mousemove', function(e) {
-                const formulas = document.querySelectorAll('.math-formula');
-                const mouseX = e.clientX / window.innerWidth;
-                const mouseY = e.clientY / window.innerHeight;
-                formulas.forEach(function(formula, index) {
-                    const speed = (index % 3 + 1) * 0.5;
-                    const x = (mouseX - 0.5) * speed * 20;
-                    const y = (mouseY - 0.5) * speed * 20;
-                    formula.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
-                });
-            });
-        });
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const btnLihatHarga = document.getElementById('btnLihatHarga');
+        const pricingModal = document.getElementById('pricingModal');
+        const closePricing = document.getElementById('closePricing');
+        const regModal = document.getElementById('regModal');
+        const closeReg = document.getElementById('closeReg');
+        const codeModal = document.getElementById('codeModal');
+        const closeCode = document.getElementById('closeCode');
+        const linkBelumPunya = document.getElementById('linkBelumPunya');
+        const regForm = document.getElementById('regForm');
+        const codeForm = document.getElementById('codeForm');
+        const regError = document.getElementById('regError');
+        const codeError = document.getElementById('codeError');
+        const heroSection = document.getElementById('heroSection');
+        const examSection = document.getElementById('examSection');
 
-        document.addEventListener('contextmenu', function(e) {
+        function openSidebar() {
+            sidebar.classList.add('active');
+            sidebarOverlay.classList.add('active');
+        }
+        function closeSidebarFn() {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+        }
+
+        hamburgerBtn.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
+            openSidebar();
         });
+        sidebarOverlay.addEventListener('click', closeSidebarFn);
+
+        document.querySelectorAll('.sidebar-item:not(.coming-soon)').forEach(item => {
+            item.addEventListener('click', function() {
+                currentTO = parseInt(this.getAttribute('data-to'));
+                closeSidebarFn();
+                regModal.classList.add('active');
+                document.getElementById('regNama').value = '';
+                document.getElementById('regKode').value = '';
+                regError.style.display = 'none';
+            });
+        });
+
+        btnLihatHarga.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            pricingModal.classList.add('active');
+        });
+        closePricing.addEventListener('click', function() {
+            pricingModal.classList.remove('active');
+        });
+        pricingModal.addEventListener('click', function(e) {
+            if (e.target === pricingModal) pricingModal.classList.remove('active');
+        });
+
+        closeReg.addEventListener('click', function() {
+            regModal.classList.remove('active');
+        });
+        regModal.addEventListener('click', function(e) {
+            if (e.target === regModal) regModal.classList.remove('active');
+        });
+
+        linkBelumPunya.addEventListener('click', function() {
+            regModal.classList.remove('active');
+            pricingModal.classList.add('active');
+        });
+
+        regForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nama = document.getElementById('regNama').value.trim();
+            const kode = document.getElementById('regKode').value.trim();
+            const list = whitelist[currentTO] || [];
+            const found = list.find(u => u.nama.toLowerCase() === nama.toLowerCase() && u.kode === kode);
+            if (found) {
+                regModal.classList.remove('active');
+                codeModal.classList.add('active');
+                document.getElementById('codeInput').value = '';
+                codeError.style.display = 'none';
+            } else {
+                regError.style.display = 'block';
+            }
+        });
+
+        closeCode.addEventListener('click', function() {
+            codeModal.classList.remove('active');
+        });
+        codeModal.addEventListener('click', function(e) {
+            if (e.target === codeModal) codeModal.classList.remove('active');
+        });
+
+        codeForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const input = document.getElementById('codeInput').value.trim();
+            if (input === kodeTO[currentTO]) {
+                codeModal.classList.remove('active');
+                startExam();
+            } else {
+                codeError.style.display = 'block';
+            }
+        });
+
+        function startExam() {
+            heroSection.style.display = 'none';
+            examSection.classList.add('active');
+            document.getElementById('questionContainer').innerHTML = `
+                <div class="question-box">
+                    <h3>Soal 1</h3>
+                    <p>Berapakah hasil dari 25 + 17?</p>
+                    <div class="option" onclick="this.classList.toggle('selected')">A. 40</div>
+                    <div class="option" onclick="this.classList.toggle('selected')">B. 42</div>
+                    <div class="option" onclick="this.classList.toggle('selected')">C. 44</div>
+                    <div class="option" onclick="this.classList.toggle('selected')">D. 46</div>
+                </div>
+                <div class="question-box">
+                    <h3>Soal 2</h3>
+                    <p>Manakah bilangan prima berikut?</p>
+                    <div class="option" onclick="this.classList.toggle('selected')">A. 15</div>
+                    <div class="option" onclick="this.classList.toggle('selected')">B. 21</div>
+                    <div class="option" onclick="this.classList.toggle('selected')">C. 29</div>
+                    <div class="option" onclick="this.classList.toggle('selected')">D. 35</div>
+                </div>
+            `;
+            startTimer(60);
+        }
+
+        function startTimer(minutes) {
+            let seconds = minutes * 60;
+            const timerEl = document.getElementById('timer');
+            timerInterval = setInterval(() => {
+                const m = Math.floor(seconds / 60);
+                const s = seconds % 60;
+                timerEl.textContent = `${m}:${s < 10 ? '0'+s : s}`;
+                if (--seconds < 0) clearInterval(timerInterval);
+            }, 1000);
+        }
     </script>
 </body>
 </html>
