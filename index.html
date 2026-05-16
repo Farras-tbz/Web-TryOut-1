@@ -881,22 +881,38 @@
 
         codeForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            e.stopPropagation();
+
             const input = document.getElementById('codeInput').value.trim();
             if (input === kodeTO[currentTO]) {
                 // Generate token dan redirect ke halaman CBT
                 const nama = document.getElementById('regNama').value.trim();
                 const token = generateToken(nama);
 
+                // Simpan data ke localStorage untuk backup
+                localStorage.setItem('current_peserta', nama);
+                localStorage.setItem('current_to', currentTO);
+
+                // Redirect ke halaman CBT
+                let targetUrl = '';
                 if (currentTO === 1) {
-                    window.location.href = 'cbt_tryout1.html?token=' + token;
+                    targetUrl = 'cbt_tryout1.html?token=' + token;
                 } else if (currentTO === 2) {
-                    window.location.href = 'cbt_tryout2.html?token=' + token;
+                    targetUrl = 'cbt_tryout2.html?token=' + token;
                 } else {
                     alert('Try Out ' + currentTO + ' belum tersedia!');
+                    return false;
                 }
+
+                // Gunakan window.location.replace agar tidak bisa back
+                window.location.replace(targetUrl);
+                return false;
             } else {
                 codeError.style.display = 'block';
+                document.getElementById('codeInput').value = '';
+                document.getElementById('codeInput').focus();
             }
+            return false;
         });
 
         // Fungsi generate token untuk akses CBT
