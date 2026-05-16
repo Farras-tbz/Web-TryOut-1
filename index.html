@@ -526,6 +526,7 @@
     </style>
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -882,47 +883,33 @@
             e.preventDefault();
             const input = document.getElementById('codeInput').value.trim();
             if (input === kodeTO[currentTO]) {
-                codeModal.classList.remove('active');
-                startExam();
+                // Generate token dan redirect ke halaman CBT
+                const nama = document.getElementById('regNama').value.trim();
+                const token = generateToken(nama);
+
+                if (currentTO === 1) {
+                    window.location.href = 'cbt_tryout1.html?token=' + token;
+                } else if (currentTO === 2) {
+                    window.location.href = 'cbt_tryout2.html?token=' + token;
+                } else {
+                    alert('Try Out ' + currentTO + ' belum tersedia!');
+                }
             } else {
                 codeError.style.display = 'block';
             }
         });
 
-        function startExam() {
-            heroSection.style.display = 'none';
-            examSection.classList.add('active');
-            document.getElementById('questionContainer').innerHTML = `
-                <div class="question-box">
-                    <h3>Soal 1</h3>
-                    <p>Berapakah hasil dari 25 + 17?</p>
-                    <div class="option" onclick="this.classList.toggle('selected')">A. 40</div>
-                    <div class="option" onclick="this.classList.toggle('selected')">B. 42</div>
-                    <div class="option" onclick="this.classList.toggle('selected')">C. 44</div>
-                    <div class="option" onclick="this.classList.toggle('selected')">D. 46</div>
-                </div>
-                <div class="question-box">
-                    <h3>Soal 2</h3>
-                    <p>Manakah bilangan prima berikut?</p>
-                    <div class="option" onclick="this.classList.toggle('selected')">A. 15</div>
-                    <div class="option" onclick="this.classList.toggle('selected')">B. 21</div>
-                    <div class="option" onclick="this.classList.toggle('selected')">C. 29</div>
-                    <div class="option" onclick="this.classList.toggle('selected')">D. 35</div>
-                </div>
-            `;
-            startTimer(60);
+        // Fungsi generate token untuk akses CBT
+        function generateToken(namaPeserta) {
+            const data = {
+                n: namaPeserta,
+                t: Date.now()
+            };
+            return btoa(JSON.stringify(data));
         }
 
-        function startTimer(minutes) {
-            let seconds = minutes * 60;
-            const timerEl = document.getElementById('timer');
-            timerInterval = setInterval(() => {
-                const m = Math.floor(seconds / 60);
-                const s = seconds % 60;
-                timerEl.textContent = `${m}:${s < 10 ? '0'+s : s}`;
-                if (--seconds < 0) clearInterval(timerInterval);
-            }, 1000);
-        }
-    </script>
+        // Fungsi startExam() dan startTimer() dihapus
+        // Sekarang redirect ke halaman CBT terpisah setelah login sukses
+        // Lihat: cbt_tryout1.html dan cbt_tryout2.html</script>
 </body>
 </html>
