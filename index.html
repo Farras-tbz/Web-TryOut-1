@@ -525,6 +525,7 @@
         }
     </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -700,67 +701,65 @@
 
        // DATABASE PESERTA TO 1 (Whitelist terpisah)
         const WHITELISTED_USERS_TO1 = [
-            { code: '12109856', name: 'AFIDA (1A)' },
-            { code: '09156728', name: 'NAJWA (2B)' },
-            { code: '56189914', name: 'NADINE (3C)' },
-            { code: '00592178', name: 'ERIN (4D)' },
-            { code: '81792443', name: 'FIRA (5E)' },
-            { code: '19847652', name: 'BAGAS (6F)' },
-            { code: '76518423', name: 'NAILAH (7G)' },
-            { code: '11098762', name: 'SALSA (8H)' },
-            { code: '56718293', name: 'MAYA (9I)' },
-            { code: '87652113', name: 'REZA (10J)' },
-            { code: '35672119', name: 'SYIFA (11K)' },
-            { code: '81907568', name: 'PRIYO (12L)' },
-            { code: '01987551', name: 'JESSYCA (13M)' },
-            { code: '55671880', name: 'BASIT (14N)' },
-            { code: '11678591', name: 'DHANA (15O)' },
-            { code: '31455590', name: 'NAYLA (16P)' },
-            { code: '01925541', name: 'KAVIRA (17R)' },
-            { code: '11009872', name: 'KEIRA (18S)' },
-            { code: '67854551', name: 'LUVIA (19T)' },
-            { code: '10888782', name: 'ZHAFIF (20U)' },
-            { code: '65755133', name: 'HASKIYA (21V)' },
-            { code: '00918877', name: 'MAULA (22W)' },
-            { code: '32112309', name: 'AUDRY (23X)' },
-            { code: '99871134', name: 'SYAHMI (24Y)' },
-            { code: '76541009', name: 'DIRGA (25Z)' },
-            { code: '55901213', name: 'VIOLET (1A)' },
-            { code: '5981002', name: 'ECY (2B)' },
-            { code: '1320988', name: 'WILY (3C)' },
-            { code: '1230089', name: 'ANZILNA (4D)' },
-            { code: '1089913', name: 'NABILA (5E)' },
-            
-            
+                        { code: '12109856', name: 'AFIDA (1A)' },
+                        { code: '09156728', name: 'NAJWA (2B)' },
+                        { code: '56189914', name: 'NADINE (3C)' },
+                        { code: '00592178', name: 'ERIN (4D)' },
+                        { code: '81792443', name: 'FIRA (5E)' },
+                        { code: '19847652', name: 'BAGAS (6F)' },
+                        { code: '76518423', name: 'NAILAH (7G)' },
+                        { code: '11098762', name: 'SALSA (8H)' },
+                        { code: '56718293', name: 'MAYA (9I)' },
+                        { code: '87652113', name: 'REZA (10J)' },
+                        { code: '35672119', name: 'SYIFA (11K)' },
+                        { code: '81907568', name: 'PRIYO (12L)' },
+                        { code: '01987551', name: 'JESSYCA (13M)' },
+                        { code: '55671880', name: 'BASIT (14N)' },
+                        { code: '11678591', name: 'DHANA (15O)' },
+                        { code: '31455590', name: 'NAYLA (16P)' },
+                        { code: '01925541', name: 'KAVIRA (17R)' },
+                        { code: '11009872', name: 'KEIRA (18S)' },
+                        { code: '67854551', name: 'LUVIA (19T)' },
+                        { code: '10888782', name: 'ZHAFIF (20U)' },
+                        { code: '65755133', name: 'HASKIYA (21V)' },
+                        { code: '00918877', name: 'MAULA (22W)' },
+                        { code: '32112309', name: 'AUDRY (23X)' },
+                        { code: '99871134', name: 'SYAHMI (24Y)' },
+                        { code: '76541009', name: 'DIRGA (25Z)' },
+                        { code: '55901213', name: 'VIOLET (1A)' },
+                        { code: '5981002', name: 'ECY (2B)' },
+                        { code: '1320988', name: 'WILY (3C)' },
+                        { code: '1230089', name: 'ANZILNA (4D)' },
+                        { code: '1089913', name: 'NABILA (5E)' },
         ];
 
         // DATABASE PESERTA TO 2 (Whitelist terpisah - nama berbeda!)
         const WHITELISTED_USERS_TO2 = [
-            { code: '9187542', name: 'DANI (1AA)' },
-            { code: '5541322', name: 'MAULA (2BB)' },
-            { code: '1109784', name: 'ERIN (3CC)' },
-            { code: '8871099', name: 'FELYSA (4DD)' },
-            { code: '6159224', name: 'FIRA (5EE)' },
-            { code: '5019371', name: 'HENDRA (6FF)' },
-            { code: '0019758', name: 'JESSICA (7GG)' },
-            { code: '3319002', name: 'KALISA (8HH)' },
-            { code: '2766511', name: 'KAVIRAH (9II)' },
-            { code: '5500123', name: 'KYLA (10JJ)' },
-            { code: '0123994', name: 'MAYA (11KK)' },
-            { code: '4190078', name: 'NADINE (12LL)' },
-            { code: '9178002', name: 'NAY (13MM)' },
-            { code: '5170966', name: 'NISA (14NN)' },
-            { code: '6679100', name: 'REZA (15OO)' },
-            { code: '1100978', name: 'RIRIS (16PP)' },
-            { code: '2019845', name: 'SALSA (17QQ)' },
-            { code: '8179092', name: 'NAYLA (18RR)' },
-            { code: '2391784', name: 'KEIRA (19SS)' },
-            { code: '0019847', name: 'MILA (20TT)' },
-            { code: '3219800', name: 'ZHAFIF (21UU)' },
-            { code: '5671123', name: 'SYAHMI (22VV)' },
-            { code: '5430981', name: 'VIOLET (23WW)' },
-            { code: '8760911', name: 'DIRGA (24XX)' },
-            { code: '1675002', name: 'ECY (25YY)' },
+                        { code: '9187542', name: 'DANI (1AA)' },
+                        { code: '5541322', name: 'MAULA (2BB)' },
+                        { code: '1109784', name: 'ERIN (3CC)' },
+                        { code: '8871099', name: 'FELYSA (4DD)' },
+                        { code: '6159224', name: 'FIRA (5EE)' },
+                        { code: '5019371', name: 'HENDRA (6FF)' },
+                        { code: '0019758', name: 'JESSICA (7GG)' },
+                        { code: '3319002', name: 'KALISA (8HH)' },
+                        { code: '2766511', name: 'KAVIRAH (9II)' },
+                        { code: '5500123', name: 'KYLA (10JJ)' },
+                        { code: '0123994', name: 'MAYA (11KK)' },
+                        { code: '4190078', name: 'NADINE (12LL)' },
+                        { code: '9178002', name: 'NAY (13MM)' },
+                        { code: '5170966', name: 'NISA (14NN)' },
+                        { code: '6679100', name: 'REZA (15OO)' },
+                        { code: '1100978', name: 'RIRIS (16PP)' },
+                        { code: '2019845', name: 'SALSA (17QQ)' },
+                        { code: '8179092', name: 'NAYLA (18RR)' },
+                        { code: '2391784', name: 'KEIRA (19SS)' },
+                        { code: '0019847', name: 'MILA (20TT)' },
+                        { code: '3219800', name: 'ZHAFIF (21UU)' },
+                        { code: '5671123', name: 'SYAHMI (22VV)' },
+                        { code: '5430981', name: 'VIOLET (23WW)' },
+                        { code: '8760911', name: 'DIRGA (24XX)' },
+                        { code: '1675002', name: 'ECY (25YY)' },
         ];
         
         // PASSWORD TRY OUT
@@ -848,9 +847,14 @@
 
         regForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const nama = document.getElementById('regNama').value.trim();
-            const kode = document.getElementById('regKode').value.trim();
+            let nama = document.getElementById('regNama').value.trim();
+            let kode = document.getElementById('regKode').value.trim();
+            // Remove extra spaces
+            nama = nama.replace(/\s+/g, ' ');
+            kode = kode.replace(/\s+/g, '');
             const list = whitelist[currentTO] || [];
+            console.log('Validating TO:', currentTO, 'Nama:', nama, 'Kode:', kode);
+            console.log('Available users:', list.length);
             const found = list.find(u => u.name.toLowerCase() === nama.toLowerCase() && u.kode === kode);
             if (found) {
                 regModal.classList.remove('active');
@@ -859,6 +863,11 @@
                 codeError.style.display = 'none';
             } else {
                 regError.style.display = 'block';
+                // Show debug info in console to help troubleshooting
+                const nameMatch = list.find(u => u.name.toLowerCase() === nama.toLowerCase());
+                const codeMatch = list.find(u => u.kode === kode);
+                if (nameMatch) console.log('Nama cocok tapi kode salah. Kode benar:', nameMatch.kode);
+                if (codeMatch) console.log('Kode cocok tapi nama salah. Nama benar:', codeMatch.name);
             }
         });
 
