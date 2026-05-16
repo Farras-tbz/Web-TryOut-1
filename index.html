@@ -766,8 +766,8 @@
         // PASSWORD TRY OUT
         const TRYOUT_PASSWORD = '875611092';
         const TRYOUT_2_PASSWORD = '917055432';
-        
-         // URL WEBSITE TRY OUT
+
+        // URL WEBSITE TRY OUT (GitHub Pages)
         const TRYOUT_URL = 'https://farras-tbz.github.io/SOAL-TRY-OUT-1/';
         const TRYOUT_2_URL = 'https://farras-tbz.github.io/SOAL-TRY-OUT-2/';
 
@@ -897,12 +897,12 @@
                 localStorage.setItem('current_peserta', nama);
                 localStorage.setItem('current_to', currentTO);
 
-                // Redirect ke halaman CBT
-                let targetUrl = '';
+                // Redirect ke halaman CBT (GitHub Pages)
+                var targetUrl = '';
                 if (currentTO === 1) {
-                    targetUrl = 'cbt_tryout1.html?token=' + token;
+                    targetUrl = 'https://farras-tbz.github.io/SOAL-TRY-OUT-1/?token=' + token;
                 } else if (currentTO === 2) {
-                    targetUrl = 'cbt_tryout2.html?token=' + token;
+                    targetUrl = 'https://farras-tbz.github.io/SOAL-TRY-OUT-2/?token=' + token;
                 } else {
                     alert('Try Out ' + currentTO + ' belum tersedia!');
                     return false;
