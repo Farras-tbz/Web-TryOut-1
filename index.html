@@ -220,6 +220,12 @@
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+        .navbar img {
+            max-width: 120px;
+            height: 40px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
         .hamburger-btn {
             background: none;
             border: none;
@@ -230,6 +236,8 @@
             gap: 5px;
             z-index: 1001;
             position: relative;
+            pointer-events: auto;
+            flex-shrink: 0;
         }
         .hamburger-btn span {
             display: block;
@@ -526,9 +534,6 @@
     </style>
 <base target="_blank">
 <base target="_blank">
-<base target="_blank">
-<base target="_blank">
-<base target="_blank">
 </head>
 <body>
 
@@ -761,15 +766,15 @@
             { code: '2290193', name: 'CHRISTIAN (15O)' },
             { code: '6571109', name: 'YASMIN (16P)' },
             { code: '5167110', name: 'KELLA (17Q)' },
-            ];
+        ];
 
-            // DATABASE PESERTA TO 4 (Whitelist terpisah)
-const WHITELISTED_USERS_TO4 = [
-    { code: '11111111', name: 'BUDI (1A)' },
-    { code: '22222222', name: 'ANI (2B)' },
-    { code: '33333333', name: 'CITRA (3C)' },
-    // Tambahkan peserta lain di sini
-];
+        // DATABASE PESERTA TO 4 (Whitelist terpisah)
+        const WHITELISTED_USERS_TO4 = [
+            { code: '11111111', name: 'BUDI (1A)' },
+            { code: '22222222', name: 'ANI (2B)' },
+            { code: '33333333', name: 'CITRA (3C)' },
+            // Tambahkan peserta lain di sini
+        ];
 
         // DATABASE PESERTA TO 2 (Whitelist terpisah - nama berbeda!)
         const WHITELISTED_USERS_TO2 = [
@@ -859,6 +864,7 @@ const WHITELISTED_USERS_TO4 = [
         hamburgerBtn.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
+            console.log('Hamburger clicked!');
             openSidebar();
         });
         sidebarOverlay.addEventListener('click', closeSidebarFn);
