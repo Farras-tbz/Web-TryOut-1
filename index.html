@@ -923,15 +923,16 @@ const TRYOUT_AKBAR_URL = 'https://farras-tbz.github.io/try-out-akbar/'; // ← T
         sidebarOverlay.addEventListener('click', closeSidebarFn);
 
         document.querySelectorAll('.sidebar-item:not(.coming-soon)').forEach(item => {
-            item.addEventListener('click', function() {
-                currentTO = parseInt(this.getAttribute('data-to'));
-                closeSidebarFn();
-                regModal.classList.add('active');
-                document.getElementById('regNama').value = '';
-                document.getElementById('regKode').value = '';
-                regError.style.display = 'none';
-            });
-        });
+    item.addEventListener('click', function() {
+        const rawTO = this.getAttribute('data-to');
+        currentTO = rawTO === 'akbar' ? 'akbar' : parseInt(rawTO);
+        closeSidebarFn();
+        regModal.classList.add('active');
+        document.getElementById('regNama').value = '';
+        document.getElementById('regKode').value = '';
+        regError.style.display = 'none';
+    });
+});
 
         btnLihatHarga.addEventListener('click', function(e) {
             e.preventDefault();
